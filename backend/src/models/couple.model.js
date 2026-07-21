@@ -17,6 +17,8 @@ const initializeCoupleModel = (sequelize) => {
           model: 'users',
           key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
       },
       anniversary_date: {
         type: DataTypes.DATEONLY,
@@ -27,7 +29,7 @@ const initializeCoupleModel = (sequelize) => {
         allowNull: true,
       },
       status: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.ENUM('active', 'paused', 'ended'),
         allowNull: false,
         defaultValue: 'active',
       },
@@ -39,7 +41,7 @@ const initializeCoupleModel = (sequelize) => {
       timestamps: true,
       underscored: true,
       paranoid: false,
-      freezeTableName: false,
+      freezeTableName: true,
       indexes: [{ fields: ['created_by'] }],
     },
   );

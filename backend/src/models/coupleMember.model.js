@@ -17,6 +17,8 @@ const initializeCoupleMemberModel = (sequelize) => {
           model: 'couples',
           key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       user_id: {
         type: DataTypes.UUID,
@@ -25,11 +27,13 @@ const initializeCoupleMemberModel = (sequelize) => {
           model: 'users',
           key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       role: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.ENUM('initiator', 'partner'),
         allowNull: false,
-        defaultValue: 'member',
+        defaultValue: 'initiator',
       },
       joined_at: {
         type: DataTypes.DATE,
@@ -44,7 +48,7 @@ const initializeCoupleMemberModel = (sequelize) => {
       timestamps: true,
       underscored: true,
       paranoid: false,
-      freezeTableName: false,
+      freezeTableName: true,
       indexes: [
         { fields: ['couple_id'] },
         { fields: ['user_id'] },
