@@ -5,12 +5,13 @@ const { Couple, initializeCoupleModel } = require('./couple.model');
 const { CoupleMember, initializeCoupleMemberModel } = require('./coupleMember.model');
 const { RefreshToken, initializeRefreshTokenModel } = require('./refreshToken.model');
 const { CoupleInvitation, initializeCoupleInvitationModel } = require('./coupleInvitation.model');
+const { Memory, initializeMemoryModel } = require('./memory.model');
 
 let modelsInitialized = false;
 
 const initializeModels = () => {
   if (modelsInitialized) {
-    return { User, Couple, CoupleMember, RefreshToken, CoupleInvitation };
+    return { User, Couple, CoupleMember, RefreshToken, CoupleInvitation, Memory };
   }
 
   initializeUserModel(sequelize);
@@ -18,6 +19,7 @@ const initializeModels = () => {
   initializeCoupleMemberModel(sequelize);
   initializeRefreshTokenModel(sequelize);
   initializeCoupleInvitationModel(sequelize);
+  initializeMemoryModel(sequelize);
 
   User.hasMany(Couple, {
     foreignKey: 'created_by',
@@ -75,6 +77,23 @@ const initializeModels = () => {
     foreignKey: 'sender_id',
     as: 'sender',
   });
+
+  User.hasMany(Memory, {
+    foreignKey: 'created_by',
+    as: 'memories',
+  });
+  Memory.belongsTo(User, {
+    foreignKey: 'created_by',
+    as: 'user',
+  });
+  Couple.hasMany(Memory, {
+    foreignKey: 'couple_id',
+    as: 'memories',
+  });
+  Memory.belongsTo(Couple, {
+    foreignKey: 'couple_id',
+    as: 'couple',
+  });
   CoupleInvitation.belongsTo(User, {
     foreignKey: 'receiver_id',
     as: 'receiver',
@@ -82,7 +101,7 @@ const initializeModels = () => {
 
   modelsInitialized = true;
 
-  return { User, Couple, CoupleMember, RefreshToken, CoupleInvitation };
+  return { User, Couple, CoupleMember, RefreshToken, CoupleInvitation, Memory };
 };
 
 initializeModels();
@@ -96,4 +115,5 @@ module.exports = {
   CoupleMember,
   RefreshToken,
   CoupleInvitation,
+  Memory,
 };
