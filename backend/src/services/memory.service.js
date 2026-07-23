@@ -1,101 +1,119 @@
 const ApiError = require('../utils/ApiError');
-const {
-  validateCreateMemory,
-  validateUpdateMemory,
-  validateDeleteMemory,
-  validateFavoriteMemory,
-} = require('../validations/memory.validation');
+
 const memoryRepository = require('../repositories/memory.repository');
+const coupleService = require('./couple.service');
+const notificationService = require('./notification.service');
 
-const validateOrThrow = (validation) => {
-  if (!validation.isValid) {
-    throw new ApiError(400, 'Validation failed', validation.errors);
-  }
-};
+const {
+    validateCreateMemory,
+    validateUpdateMemory,
+} = require('../validations/memory.validation');
 
-const ensureCoupleMember = async (coupleId, userId) => {
-  const membership = await memoryRepository.findMembership(coupleId, userId);
-  if (!membership) throw new ApiError(403, 'You do not belong to this couple');
-};
+class MemoryService {
+    async createMemory(userId, data) {
+        const validation = validateCreateMemory(data);
 
-const getMemoryOrThrow = async (memoryId) => {
-  const memory = await memoryRepository.findById(memoryId);
-  if (!memory) throw new ApiError(404, 'Memory not found');
-  return memory;
-};
+        if (!validation.isValid) {
+            throw new ApiError(
+                400,
+                'Validation failed',
+                validation.errors
+            );
+        }
 
-const ensureMemoryVisible = async (memory, userId) => {
-  await ensureCoupleMember(memory.couple_id, userId);
-  if (memory.visibility === 'private' && memory.created_by !== userId) {
-    throw new ApiError(403, 'This private memory is not available to you');
-  }
-};
+        await coupleService.findMembership(
+            userId,
+            data.couple_id
+        );
 
-const createMemory = async (userId, coupleId, data) => {
-  validateOrThrow(validateCreateMemory(data));
-  await ensureCoupleMember(coupleId, userId);
+        const memory = await memoryRepository.create({
+            ...data,
+            creator_id: userId,
+        });
 
-  return memoryRepository.create({
-    couple_id: coupleId,
-    created_by: userId,
-    title: data.title,
-    description: data.description,
-    memory_date: data.memory_date,
-    visibility: data.visibility || 'shared',
-  });
-};
+        if (memory.visibility !== 'private') {
+            const partner =
+    await coupleService.getPartner(
+        userId,
+        data.couple_id
+    );
 
-const updateMemory = async (userId, data) => {
-  validateOrThrow(validateUpdateMemory(data));
-  validateOrThrow(validateDeleteMemory(data));
+const partnerId =
+    partner?.user_id;
 
-  const memory = await getMemoryOrThrow(data.memory_id);
-  await ensureCoupleMember(memory.couple_id, userId);
-  if (memory.created_by !== userId) throw new ApiError(403, 'Only the memory creator can update it');
+            if (partnerId) {
+                await notificationService.createSystemNotification(
+                    partnerId,
+                    userId,
+                    'MEMORY_CREATED',
+                    memory.id,
+                    'Your partner created a new memory.'
+                );
+            }
+        }
 
-  const updates = {};
-  for (const field of ['title', 'description', 'memory_date', 'visibility']) {
-    if (data[field] !== undefined) updates[field] = data[field];
-  }
-  await memoryRepository.update(memory.id, updates);
+        return memory;
+    }
 
-  return memoryRepository.findById(memory.id);
-};
+    async updateMemory(userId, memoryId, data) {
+        const validation = validateUpdateMemory(data);
 
-const deleteMemory = async (userId, data) => {
-  validateOrThrow(validateDeleteMemory(data));
+        if (!validation.isValid) {
+            throw new ApiError(
+                400,
+                'Validation failed',
+                validation.errors
+            );
+        }
 
-  const memory = await getMemoryOrThrow(data.memory_id);
-  await ensureCoupleMember(memory.couple_id, userId);
-  if (memory.created_by !== userId) throw new ApiError(403, 'Only the memory creator can delete it');
+        const memory =
+            await memoryRepository.findById(memoryId);
 
-  await memoryRepository.deleteMemory(memory.id);
-};
+        if (!memory) {
+            throw new ApiError(404, 'Memory not found');
+        }
 
-const listMemories = async (userId, coupleId) => {
-  await ensureCoupleMember(coupleId, userId);
+        await coupleService.findMembership(
+            userId,
+            memory.couple_id
+        );
 
-  const memories = await memoryRepository.findAllByCouple(coupleId);
-  return memories.filter((memory) => memory.visibility === 'shared' || memory.created_by === userId);
-};
+        return await memoryRepository.update(
+            memoryId,
+            data
+        );
+    }
 
-const toggleFavorite = async (userId, data) => {
-  validateOrThrow(validateFavoriteMemory(data));
-  if (typeof data.value !== 'boolean') {
-    throw new ApiError(400, 'Favorite value must be a boolean');
-  }
+    async deleteMemory(userId, memoryId) {
+        const memory =
+            await memoryRepository.findById(memoryId);
 
-  const memory = await getMemoryOrThrow(data.memory_id);
-  await ensureMemoryVisible(memory, userId);
-  await memoryRepository.toggleFavorite(memory.id, data.value);
+        if (!memory) {
+            throw new ApiError(404, 'Memory not found');
+        }
 
-  return memoryRepository.findById(memory.id);
-};
+        await coupleService.findMembership(
+            userId,
+            memory.couple_id
+        );
 
-module.exports = {
-  createMemory,
-  updateMemory,
-  deleteMemory,
-  listMemories,
-  toggleFavorite,
-};
+        await memoryRepository.remove(memoryId);
+
+        return {
+            deleted: true,
+        };
+    }
+
+    async listMemories(userId, coupleId) {
+        await coupleService.findMembership(
+            userId,
+            coupleId
+        );
+
+        return await memoryRepository.findAllByCouple(
+            coupleId
+        );
+    }
+}
+
+module.exports = new MemoryService();

@@ -1,0 +1,100 @@
+.login-page{
+
+    width:100%;
+
+    max-width:430px;
+
+    margin:auto;
+
+}
+
+.login-logo{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:40px;
+
+    background:linear-gradient(
+        135deg,
+        #ff4f8b,
+        #ff7eb3
+    );
+
+    color:white;
+
+    box-shadow:
+        0 20px 45px rgba(255,79,139,.35);
+
+}
+
+.login-page h1{
+
+    text-align:center;
+
+    font-size:34px;
+
+    margin-bottom:10px;
+
+}
+
+.login-page p{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+    color:#777;
+
+}
+
+.forgot-password{
+
+    text-align:right;
+
+    margin-bottom:25px;
+
+}
+
+.forgot-password a{
+
+    color:#ff4f8b;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+.register-link{
+
+    text-align:center;
+
+    margin-top:30px;
+
+    font-size:15px;
+
+}
+
+.register-link a{
+
+    margin-left:8px;
+
+    color:#ff4f8b;
+
+    font-weight:700;
+
+}

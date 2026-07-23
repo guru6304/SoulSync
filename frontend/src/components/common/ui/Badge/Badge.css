@@ -1,0 +1,99 @@
+.ss-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+    border:1px solid transparent;
+
+}
+
+.ss-badge--rounded{
+
+    border-radius:999px;
+
+}
+
+/* Sizes */
+
+.ss-badge--sm{
+
+    padding:var(--space-1) var(--space-3);
+
+    font-size:.75rem;
+
+}
+
+.ss-badge--md{
+
+    padding:var(--space-2) var(--space-4);
+
+    font-size:.875rem;
+
+}
+
+.ss-badge--lg{
+
+    padding:var(--space-3) var(--space-5);
+
+    font-size:1rem;
+
+}
+
+/* Variants */
+
+.ss-badge--primary{
+
+    background:var(--color-primary);
+
+    color:var(--color-white);
+
+}
+
+.ss-badge--secondary{
+
+    background:var(--color-secondary);
+
+    color:var(--color-white);
+
+}
+
+.ss-badge--success{
+
+    background:var(--color-success);
+
+    color:var(--color-white);
+
+}
+
+.ss-badge--warning{
+
+    background:var(--color-warning);
+
+    color:var(--color-black);
+
+}
+
+.ss-badge--danger{
+
+    background:var(--color-danger);
+
+    color:var(--color-white);
+
+}
+
+.ss-badge--outline{
+
+    background:transparent;
+
+    color:var(--color-primary);
+
+    border-color:var(--color-primary);
+
+}

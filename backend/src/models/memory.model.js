@@ -1,80 +1,48 @@
-const { DataTypes, Model } = require("sequelize");
+// src/models/memory.model.js
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
 class Memory extends Model {}
 
-const initializeMemoryModel = (sequelize) => {
-  Memory.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-      },
-      couple_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "couples",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      created_by: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      title: {
-        type: DataTypes.STRING(200),
-        allowNull: false,
-        validate: {
-          len: [1, 200],
-        },
-      },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-        validate: {
-          len: [0, 5000],
-        },
-      },
-      memory_date: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-      },
-      visibility: {
-        type: DataTypes.ENUM("shared", "private"),
-        allowNull: false,
-        defaultValue: "shared",
-      },
-      is_favorite: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
+Memory.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
-    {
-      sequelize,
-      modelName: "Memory",
-      tableName: "memories",
-      timestamps: true,
-      underscored: true,
-      freezeTableName: true,
-      indexes: [
-        { fields: ["couple_id"] },
-        { fields: ["created_by"] },
-        { fields: ["memory_date"] },
-      ],
+    couple_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
-  );
+    creator_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    title: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    visibility: {
+      type: DataTypes.ENUM('private', 'shared', 'public'),
+      defaultValue: 'private',
+    },
+  },
+  {
+    sequelize,
+    modelName: 'Memory',
+    tableName: 'memories',
+    timestamps: true,
+    underscored: true,
+    indexes: [
+      { fields: ['couple_id'] },
+      { fields: ['creator_id'] },
+    ],
+  }
+);
 
-  return Memory;
-};
-
-module.exports = { Memory, initializeMemoryModel };
+module.exports = Memory;

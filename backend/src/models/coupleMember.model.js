@@ -1,63 +1,56 @@
-const { DataTypes, Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
 class CoupleMember extends Model {}
 
-const initializeCoupleMemberModel = (sequelize) => {
-  CoupleMember.init(
+CoupleMember.init(
     {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-      },
-      couple_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'couples',
-          key: 'id',
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'users',
-          key: 'id',
+
+        couple_id: {
+            type: DataTypes.UUID,
+            allowNull: false,
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      role: {
-        type: DataTypes.ENUM('initiator', 'partner'),
-        allowNull: false,
-        defaultValue: 'initiator',
-      },
-      joined_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
+
+        user_id: {
+            type: DataTypes.UUID,
+            allowNull: false,
+        },
+
+        role: {
+            type: DataTypes.ENUM(
+                'initiator',
+                'partner'
+            ),
+            allowNull: false,
+            defaultValue: 'partner',
+        },
     },
     {
-      sequelize,
-      modelName: 'CoupleMember',
-      tableName: 'couple_members',
-      timestamps: true,
-      underscored: true,
-      paranoid: false,
-      freezeTableName: true,
-      indexes: [
-        { fields: ['couple_id'] },
-        { fields: ['user_id'] },
-        { unique: true, fields: ['couple_id', 'user_id'] },
-      ],
-    },
-  );
+        sequelize,
+        modelName: 'CoupleMember',
+        tableName: 'couple_members',
+        timestamps: true,
+        underscored: true,
+        freezeTableName: true,
 
-  return CoupleMember;
-};
+        indexes: [
+            {
+                unique: true,
+                fields: [
+                    'couple_id',
+                    'user_id',
+                ],
+            },
+            {
+                fields: ['user_id'],
+            },
+        ],
+    }
+);
 
-module.exports = { CoupleMember, initializeCoupleMemberModel };
+module.exports = CoupleMember;

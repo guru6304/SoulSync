@@ -1,36 +1,77 @@
-const { Memory, CoupleMember } = require('../models');
+const {
+    Memory,
+    User,
+    Couple,
+} = require('../models');
 
-const findById = (id) => Memory.findByPk(id);
+class MemoryRepository {
+    async create(data) {
+        return await Memory.create(data);
+    }
 
-const findAllByCouple = (coupleId) => Memory.findAll({
-  where: { couple_id: coupleId },
-  order: [['memory_date', 'DESC'], ['created_at', 'DESC']],
-});
+    async findById(id) {
+        return await Memory.findByPk(id, {
+            include: [
+                {
+                    model: User,
+                    as: 'creator',
+                    attributes: [
+                        'id',
+                        'first_name',
+                        'last_name',
+                        'profile_picture',
+                    ],
+                },
+                {
+                    model: Couple,
+                    as: 'couple',
+                },
+            ],
+        });
+    }
 
-const create = (data) => Memory.create(data);
+    async update(id, data) {
+        const memory = await Memory.findByPk(id);
 
-const update = (id, data) => Memory.update(data, { where: { id } });
+        if (!memory) {
+            return null;
+        }
 
-const deleteMemory = (id) => Memory.destroy({ where: { id } });
+        return await memory.update(data);
+    }
 
-const toggleFavorite = (id, value) => Memory.update(
-  { is_favorite: value },
-  { where: { id } },
-);
+    async remove(id) {
+        const memory = await Memory.findByPk(id);
 
-const findMembership = (coupleId, userId) => CoupleMember.findOne({
-  where: {
-    couple_id: coupleId,
-    user_id: userId,
-  },
-});
+        if (!memory) {
+            return false;
+        }
 
-module.exports = {
-  findById,
-  findAllByCouple,
-  create,
-  update,
-  deleteMemory,
-  toggleFavorite,
-  findMembership,
-};
+        await memory.destroy();
+
+        return true;
+    }
+
+    async findAllByCouple(coupleId) {
+        return await Memory.findAll({
+            where: {
+                couple_id: coupleId,
+            },
+            include: [
+                {
+                    model: User,
+                    as: 'creator',
+                    attributes: [
+                        'id',
+                        'first_name',
+                        'last_name',
+                        'profile_picture',
+                    ],
+                },
+            ],
+            order: [['created_at', 'DESC']],
+        });
+    }
+}
+
+module.exports = new MemoryRepository();

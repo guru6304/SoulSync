@@ -1,29 +1,23 @@
-const { User } = require('../models');
+// src/middlewares/auth.middleware.js
 const ApiError = require('../utils/ApiError');
-const asyncHandler = require('../utils/asyncHandler');
-const { verifyAccessToken } = require('../utils/jwt');
+const jwt = require('../utils/jwt');
 
-const authenticate = asyncHandler(async (req, _res, next) => {
-  const authorization = req.headers.authorization;
-  const [scheme, token] = authorization ? authorization.split(' ') : [];
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
-  if (scheme !== 'Bearer' || !token) {
-    throw new ApiError(401, 'Authorization token is required');
-  }
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return next(new ApiError(401, 'Unauthorized: No token provided'));
+    }
 
-  let payload;
-  try {
-    payload = verifyAccessToken(token);
-  } catch (_error) {
-    throw new ApiError(401, 'Invalid or expired access token');
-  }
+    const token = authHeader.split(' ')[1];
 
-  const user = await User.findByPk(payload.sub);
-  if (!user) throw new ApiError(401, 'User not found');
-  if (!user.is_active) throw new ApiError(403, 'User account is inactive');
+    try {
+        const decoded = jwt.verifyToken(token);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return next(new ApiError(401, 'Unauthorized: Invalid token'));
+    }
+};
 
-  req.user = user;
-  next();
-});
-
-module.exports = authenticate;
+module.exports = { authMiddleware };

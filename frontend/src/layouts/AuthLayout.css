@@ -1,0 +1,184 @@
+.auth-layout {
+
+    position: relative;
+
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8fa 0%,
+            #ffe4ef 50%,
+            #ffd8e8 100%
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 24px;
+
+}
+
+.auth-overlay {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 2;
+
+}
+
+.auth-card {
+
+    width: 100%;
+
+    max-width: 460px;
+
+    background: rgba(255,255,255,.78);
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    border-radius: 28px;
+
+    padding: 48px;
+
+    border: 1px solid rgba(255,255,255,.6);
+
+    box-shadow:
+        0 25px 70px rgba(233,30,99,.15);
+
+}
+
+.background-circle {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(25px);
+
+    opacity: .45;
+
+    animation: float 8s ease-in-out infinite;
+
+}
+
+.circle-one {
+
+    width: 260px;
+
+    height: 260px;
+
+    background: #ff8fb8;
+
+    top: -70px;
+
+    left: -70px;
+
+}
+
+.circle-two {
+
+    width: 340px;
+
+    height: 340px;
+
+    background: #ffc2d8;
+
+    right: -120px;
+
+    bottom: -120px;
+
+    animation-delay: 2s;
+
+}
+
+.circle-three {
+
+    width: 180px;
+
+    height: 180px;
+
+    background: #ffd8e8;
+
+    top: 45%;
+
+    left: 12%;
+
+    animation-delay: 4s;
+
+}
+
+@keyframes float {
+
+    0% {
+
+        transform:
+            translateY(0px)
+            scale(1);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(-20px)
+            scale(1.05);
+
+    }
+
+    100% {
+
+        transform:
+            translateY(0px)
+            scale(1);
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .auth-card {
+
+        padding: 32px 24px;
+
+        border-radius: 22px;
+
+    }
+
+    .circle-one {
+
+        width: 180px;
+
+        height: 180px;
+
+    }
+
+    .circle-two {
+
+        width: 220px;
+
+        height: 220px;
+
+    }
+
+    .circle-three {
+
+        display: none;
+
+    }
+
+}

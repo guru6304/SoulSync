@@ -1,15 +1,21 @@
-const { Router } = require('express');
-const memoryController = require('../controllers/memory.controller');
-const authenticate = require('../middlewares/auth.middleware');
+const express = require('express');
 
-const router = Router();
+const {
+    authMiddleware: authenticate,
+} = require('../middlewares/auth.middleware');
+
+const controller = require('../controllers/memory.controller');
+
+const router = express.Router();
 
 router.use(authenticate);
 
-router.post('/', memoryController.createMemory);
-router.get('/', memoryController.listMemories);
-router.put('/:id', memoryController.updateMemory);
-router.delete('/:id', memoryController.deleteMemory);
-router.patch('/:id/favorite', memoryController.toggleFavorite);
+router.post('/', controller.createMemory);
+
+router.get('/couple/:coupleId', controller.listMemories);
+
+router.put('/:memoryId', controller.updateMemory);
+
+router.delete('/:memoryId', controller.deleteMemory);
 
 module.exports = router;

@@ -1,68 +1,78 @@
 const {
-  sequelize,
-  CoupleInvitation,
-  Couple,
-  CoupleMember,
+    sequelize,
+    CoupleInvitation,
 } = require('../models');
-const { Op } = require('sequelize');
 
-const findById = (id) => CoupleInvitation.findByPk(id);
+class CoupleInvitationRepository {
 
-const findPending = (senderId, receiverId) =>
-  CoupleInvitation.findOne({
-    where: {
-      status: 'pending',
-      [Op.or]: [
-        {
-          sender_id: senderId,
-          receiver_id: receiverId,
+    async findById(id) {
+        return CoupleInvitation.findByPk(id);
+    }
+
+    async create(data) {
+        return CoupleInvitation.create(data);
+    }
+
+    async update(id, data, transaction = null) {
+        await CoupleInvitation.update(
+            data,
+            {
+                where: { id },
+                transaction,
+            }
+        );
+
+        return this.findById(id);
+    }
+
+    async delete(id) {
+        return CoupleInvitation.destroy({
+            where: { id },
+        });
+    }
+
+    async findPending(senderId, receiverId) {
+
+        const { Op } = require('sequelize');
+
+        return CoupleInvitation.findOne({
+            where: {
+                status: 'pending',
+
+                [Op.or]: [
+                    {
+                        sender_id: senderId,
+                        receiver_id: receiverId,
+                    },
+                    {
+                        sender_id: receiverId,
+                        receiver_id: senderId,
+                    },
+                ],
+            },
+        });
+    }
+
+    async transaction(callback) {
+        return sequelize.transaction(callback);
+    }
+    async findReceived(userId) {
+    return CoupleInvitation.findAll({
+        where: {
+            receiver_id: userId,
         },
-        {
-          sender_id: receiverId,
-          receiver_id: senderId,
+        order: [['created_at', 'DESC']],
+    });
+}
+
+async findSent(userId) {
+    return CoupleInvitation.findAll({
+        where: {
+            sender_id: userId,
         },
-      ],
-    },
-  });
+        order: [['created_at', 'DESC']],
+    });
+}
+}
 
-const create = (data) => CoupleInvitation.create(data);
-
-const updateStatus = (id, status, timestampField) => {
-  const updates = { status };
-  if (timestampField) updates[timestampField] = new Date();
-
-  return CoupleInvitation.update(updates, { where: { id } });
-};
-
-const deleteInvitation = (id) => CoupleInvitation.destroy({ where: { id } });
-
-const findMembershipByUserId = (userId) => CoupleMember.findOne({ where: { user_id: userId } });
-
-const createCoupleWithMembers = async (invitation) => sequelize.transaction(async (transaction) => {
-  const couple = await Couple.create(
-    { created_by: invitation.sender_id },
-    { transaction },
-  );
-
-  await CoupleMember.bulkCreate([
-    { couple_id: couple.id, user_id: invitation.sender_id, role: 'initiator' },
-    { couple_id: couple.id, user_id: invitation.receiver_id, role: 'partner' },
-  ], { transaction });
-
-  await CoupleInvitation.update(
-    { status: 'accepted', accepted_at: new Date() },
-    { where: { id: invitation.id }, transaction },
-  );
-
-  return couple;
-});
-
-module.exports = {
-  findById,
-  findPending,
-  create,
-  updateStatus,
-  delete: deleteInvitation,
-  findMembershipByUserId,
-  createCoupleWithMembers,
-};
+module.exports = new CoupleInvitationRepository();

@@ -1,0 +1,63 @@
+.ss-section-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    gap:var(--space-4);
+
+    margin-bottom:var(--space-6);
+
+}
+
+.ss-section-title{
+
+    margin:0;
+
+    color:var(--color-text);
+
+}
+
+.ss-section-subtitle{
+
+    margin-top:var(--space-2);
+
+    color:var(--color-text-light);
+
+}
+
+.ss-section-action{
+
+    border:none;
+
+    background:none;
+
+    color:var(--color-primary);
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:var(--transition-normal);
+
+}
+
+.ss-section-action:hover{
+
+    opacity:.75;
+
+}
+
+@media(max-width:768px){
+
+.ss-section-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+}

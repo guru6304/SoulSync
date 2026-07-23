@@ -1,0 +1,51 @@
+.glass{
+
+    background:rgba(255,255,255,.70);
+
+    backdrop-filter:blur(16px);
+
+    border:1px solid rgba(255,255,255,.35);
+
+}
+
+.rounded{
+
+    border-radius:var(--radius-xl);
+
+}
+
+.shadow{
+
+    box-shadow:var(--shadow-md);
+
+}
+
+.flex{
+
+    display:flex;
+
+}
+
+.items-center{
+
+    align-items:center;
+
+}
+
+.justify-between{
+
+    justify-content:space-between;
+
+}
+
+.w-100{
+
+    width:100%;
+
+}
+
+.pointer{
+
+    cursor:pointer;
+
+}
