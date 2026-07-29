@@ -1,0 +1,11 @@
+.ss-page{
+
+    min-height:100vh;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:24px;
+
+}

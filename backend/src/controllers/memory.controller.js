@@ -37,6 +37,29 @@ const updateMemory = asyncHandler(async (req, res) => {
     );
 });
 
+const getMemory = asyncHandler(async (req, res) => {
+
+    const memory = await memoryService.getMemory(
+        req.user.id,
+        req.params.memoryId
+    );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+
+            200,
+
+            memory,
+
+            "Memory fetched successfully"
+
+        )
+
+    );
+
+});
+
 const deleteMemory = asyncHandler(async (req, res) => {
     const result = await memoryService.deleteMemory(
         req.user.id,
@@ -68,4 +91,5 @@ module.exports = {
     updateMemory,
     deleteMemory,
     listMemories,
+    getMemory,
 };

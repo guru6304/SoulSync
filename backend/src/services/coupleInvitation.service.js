@@ -11,119 +11,78 @@ const validateOrThrow = require('../utils/validateOrThrow');
 
 const invitationRepository = require('../repositories/coupleInvitation.repository');
 const coupleRepository = require('../repositories/couple.repository');
-
+const userRepository = require('../repositories/user.repository');
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
 class CoupleInvitationService {
 
-    async getActiveInvitation(invitationId) {
+  async sendInvitation(senderId, data) {
 
-        const invitation =
-            await invitationRepository.findById(invitationId);
+    console.log("Incoming Payload:", data);
 
-        if (!invitation) {
+    const validation = validateInvite(data);
+
+    console.log("Validation Result:", validation);
+
+    validateOrThrow(validation);
+
+const receiverEmail = data.receiver_email;
+
+const receiver =
+    await userRepository.findByEmail(receiverEmail);
+
+        if (!receiver) {
             throw new ApiError(
                 404,
-                'Invitation not found'
+                "Receiver not found"
             );
         }
 
-        if (invitation.status !== 'pending') {
-            throw new ApiError(
-                409,
-                'Invitation is no longer pending'
-            );
-        }
-
-        if (
-            invitation.expires_at &&
-            invitation.expires_at <= new Date()
-        ) {
-
-            await invitationRepository.update(
-                invitation.id,
-                {
-                    status: 'expired',
-                }
-            );
-
-            throw new ApiError(
-                410,
-                'Invitation has expired'
-            );
-        }
-
-        return invitation;
-    }
-
-    async sendInvitation(senderId, data) {
-
-        validateOrThrow(
-            validateInvite(data)
-        );
-
-        if (senderId === data.receiver_id) {
+        if (receiver.id === senderId) {
             throw new ApiError(
                 400,
-                'You cannot invite yourself'
+                "You cannot invite yourself"
             );
         }
 
-        const [
-            senderMembership,
-            receiverMembership,
-            pendingInvitation,
-        ] = await Promise.all([
-
-            coupleRepository.findMembershipByUserId(
+        const senderMembership =
+            await coupleRepository.findMembershipByUserId(
                 senderId
-            ),
+            );
 
-            coupleRepository.findMembershipByUserId(
-                data.receiver_id
-            ),
+        const receiverMembership =
+            await coupleRepository.findMembershipByUserId(
+                receiver.id
+            );
 
-            invitationRepository.findPending(
+        if (senderMembership || receiverMembership) {
+            throw new ApiError(
+                409,
+                "One or more users already belong to a couple"
+            );
+        }
+
+        const existingInvitation =
+            await invitationRepository.findPending(
                 senderId,
-                data.receiver_id
-            ),
-        ]);
-
-        if (senderMembership) {
-            throw new ApiError(
-                409,
-                'Sender already belongs to a couple'
+                receiver.id
             );
-        }
 
-        if (receiverMembership) {
+        if (existingInvitation) {
             throw new ApiError(
                 409,
-                'Receiver already belongs to a couple'
-            );
-        }
-
-        if (pendingInvitation) {
-            throw new ApiError(
-                409,
-                'A pending invitation already exists'
+                "A pending invitation already exists"
             );
         }
 
         return invitationRepository.create({
-
             sender_id: senderId,
-
-            receiver_id: data.receiver_id,
-
-            message: data.message,
-
-            status: 'pending',
-
-            expires_at:
-                new Date(
-                    Date.now() + THIRTY_DAYS
-                ),
+            receiver_id: receiver.id,
+            message: data.message || null,
+            status: "pending",
+            expires_at: new Date(
+                Date.now() + THIRTY_DAYS
+            ),
         });
     }
 
@@ -133,82 +92,102 @@ class CoupleInvitationService {
             validateAccept(data)
         );
 
-        const invitation =
-            await this.getActiveInvitation(
-                data.invitation_id
-            );
+    const invitation =
+        await this.getActiveInvitation(
+            data.invitation_id
+        );
 
-        if (
-            invitation.receiver_id !== receiverId
-        ) {
-            throw new ApiError(
-                403,
-                'Only the receiver can accept this invitation'
-            );
-        }
-
-        const [
-            senderMembership,
-            receiverMembership,
-        ] = await Promise.all([
-
-            coupleRepository.findMembershipByUserId(
-                invitation.sender_id
-            ),
-
-            coupleRepository.findMembershipByUserId(
-                invitation.receiver_id
-            ),
-        ]);
-
-        if (
-            senderMembership ||
-            receiverMembership
-        ) {
-            throw new ApiError(
-                409,
-                'One or more users already belong to a couple'
-            );
-        }
-
-        return invitationRepository.transaction(
-            async (transaction) => {
-
-                const couple =
-                    await coupleRepository.create(
-                        {},
-                        transaction
-                    );
-
-                await coupleRepository.addMembers(
-                    [
-                        {
-                            couple_id: couple.id,
-                            user_id: invitation.sender_id,
-                            role: 'initiator',
-                        },
-                        {
-                            couple_id: couple.id,
-                            user_id: invitation.receiver_id,
-                            role: 'partner',
-                        },
-                    ],
-                    transaction
-                );
-
-                await invitationRepository.update(
-                    invitation.id,
-                    {
-                        status: 'accepted',
-                        accepted_at: new Date(),
-                    },
-                    transaction
-                );
-
-                return couple;
-            }
+    if (invitation.receiver_id !== receiverId) {
+        throw new ApiError(
+            403,
+            "Only the receiver can accept this invitation"
         );
     }
+
+    const [
+        senderMembership,
+        receiverMembership,
+    ] = await Promise.all([
+
+        coupleRepository.findMembershipByUserId(
+            invitation.sender_id
+        ),
+
+        coupleRepository.findMembershipByUserId(
+            invitation.receiver_id
+        ),
+
+    ]);
+
+    if (
+        senderMembership ||
+        receiverMembership
+    ) {
+        throw new ApiError(
+            409,
+            "One or more users already belong to a couple"
+        );
+    }
+
+    return invitationRepository.transaction(
+        async (transaction) => {
+            console.log("STEP 1");
+
+            const couple =
+                await coupleRepository.create(
+                    {},
+                    transaction
+                );
+                console.log("STEP 2", couple.id);
+
+            await coupleRepository.addMembers(
+                [
+                    {
+                        couple_id: couple.id,
+                        user_id: invitation.sender_id,
+                        role: "initiator",
+                    },
+                    {
+                        couple_id: couple.id,
+                        user_id: invitation.receiver_id,
+                        role: "partner",
+                    },
+                ],
+                transaction
+            );
+            console.log("STEP 3");
+            await Promise.all([
+
+                userRepository.updateActiveCouple(
+                    invitation.sender_id,
+                    couple.id,
+                    transaction
+                ),
+
+                userRepository.updateActiveCouple(
+                    invitation.receiver_id,
+                    couple.id,
+                    transaction
+                ),
+
+            ]);
+            console.log("STEP 4");
+
+            await invitationRepository.update(
+                invitation.id,
+                {
+                    status: "accepted",
+                    accepted_at: new Date(),
+                },
+                transaction
+            );
+            console.log("STEP 5");
+            return coupleRepository.findById(
+                couple.id
+            );
+        }
+    );
+}
 
     async rejectInvitation(receiverId, data) {
 

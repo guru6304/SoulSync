@@ -1,0 +1,59 @@
+.ss-bottom-nav{
+
+    position:fixed;
+
+    left:20px;
+
+    right:20px;
+
+    bottom:20px;
+
+    height:74px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    border-radius:28px;
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid;
+
+    z-index:999;
+
+}
+
+.ss-nav-item{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:6px;
+
+    color:white;
+
+    text-decoration:none;
+
+    opacity:.75;
+
+    transition:.3s;
+
+}
+
+.ss-nav-item.active{
+
+    opacity:1;
+
+}
+
+.ss-nav-item:hover{
+
+    transform:translateY(-2px);
+
+}

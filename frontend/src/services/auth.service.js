@@ -1,33 +1,36 @@
-import apiClient from './apiClient';
+import apiClient from "./apiClient";
 
-const login = async (data) => {
+const login = async (credentials) => {
     const response = await apiClient.post(
-        '/auth/login',
-        data
+        "/auth/login",
+        credentials
     );
 
-    return response.data;
+    // Return only the backend data object
+    return response.data.data;
 };
 
-const register = async (data) => {
+const register = async (userData) => {
     const response = await apiClient.post(
-        '/auth/register',
-        data
+        "/auth/register",
+        userData
     );
 
-    return response.data;
+    return response.data.data;
 };
 
 const getProfile = async () => {
     const response = await apiClient.get(
-        '/profile'
+        "/profile"
     );
 
-    return response.data;
+    return response.data.data;
 };
 
-export default {
+const authService = {
     login,
     register,
     getProfile,
 };
+
+export default authService;

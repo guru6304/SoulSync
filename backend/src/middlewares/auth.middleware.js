@@ -12,10 +12,18 @@ const authMiddleware = (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verifyToken(token);
-        req.user = decoded;
+        const decoded = jwt.verifyAccessToken(token);
+        console.log("Decoded Token:", decoded);
+
+req.user = {
+    ...decoded,
+    id: decoded.id || decoded.sub,
+};
+console.log("req.user:", req.user);
         next();
     } catch (error) {
+        console.log("JWT ERROR:", error.message);
+    console.log("JWT_ACCESS_SECRET:", process.env.JWT_ACCESS_SECRET);
         return next(new ApiError(401, 'Unauthorized: Invalid token'));
     }
 };

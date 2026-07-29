@@ -4,25 +4,25 @@ const dashboardService = {
 
     async getDashboard() {
 
-        const response = await apiClient.get("/dashboard");
+        const { data } = await apiClient.get("/dashboard");
 
-        return response.data.data;
+        return data.data;
 
     },
 
     async getStats() {
 
-        const response = await apiClient.get("/dashboard/stats");
+        const { data } = await apiClient.get("/dashboard/stats");
 
-        return response.data.data;
+        return data.data;
 
     },
 
     async getActivity() {
 
-        const response = await apiClient.get("/dashboard/activity");
+        const { data } = await apiClient.get("/dashboard/activity");
 
-        return response.data.data;
+        return data.data;
 
     },
 

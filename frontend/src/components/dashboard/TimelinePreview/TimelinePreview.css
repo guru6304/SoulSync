@@ -1,0 +1,131 @@
+.timeline-preview{
+    padding:28px;
+    border-radius:28px;
+    background:rgba(255,255,255,.18);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 20px 45px rgba(0,0,0,.12);
+}
+
+.timeline-preview__header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+}
+
+.timeline-preview__header h2{
+    margin:0;
+    color:#fff;
+    font-size:1.5rem;
+}
+
+.timeline-preview__header span{
+    color:#ffe5f1;
+    font-size:.9rem;
+}
+
+.timeline-preview__btn{
+    border:none;
+    background:#fff;
+    color:#ff4f91;
+    cursor:pointer;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.timeline-preview__btn:hover{
+    transform:translateY(-2px);
+}
+
+.timeline-preview__list{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+.timeline-preview__list::before{
+    content:"";
+    position:absolute;
+    left:11px;
+    top:8px;
+    bottom:8px;
+    width:2px;
+    background:rgba(255,255,255,.3);
+}
+
+.timeline-item{
+    display:flex;
+    gap:18px;
+    position:relative;
+}
+
+.timeline-item__dot{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#fff;
+    border:5px solid #ff4f91;
+    flex-shrink:0;
+    z-index:2;
+}
+
+.timeline-item__content{
+    flex:1;
+    padding:18px;
+    border-radius:18px;
+    background:rgba(255,255,255,.10);
+}
+
+.timeline-item__content h3{
+    margin:0 0 8px;
+    color:#fff;
+}
+
+.timeline-item__content p{
+    color:#f5edf2;
+    line-height:1.6;
+    margin-bottom:10px;
+}
+
+.timeline-item__content span{
+    color:#ffd9ea;
+    font-size:.85rem;
+}
+
+.timeline-preview__empty{
+    text-align:center;
+    padding:55px 20px;
+    border-radius:20px;
+    background:rgba(255,255,255,.08);
+}
+
+.timeline-preview__empty span{
+    font-size:54px;
+}
+
+.timeline-preview__empty h3{
+    color:#fff;
+    margin:16px 0 10px;
+}
+
+.timeline-preview__empty p{
+    color:#f4e7ef;
+}
+
+@media(max-width:768px){
+
+    .timeline-preview{
+        padding:22px;
+    }
+
+    .timeline-preview__header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+
+}

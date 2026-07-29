@@ -1,6 +1,7 @@
 const {
     sequelize,
     CoupleInvitation,
+    User,
 } = require('../models');
 
 class CoupleInvitationRepository {
@@ -56,22 +57,86 @@ class CoupleInvitationRepository {
     async transaction(callback) {
         return sequelize.transaction(callback);
     }
-    async findReceived(userId) {
+async findReceived(userId) {
+
     return CoupleInvitation.findAll({
+
         where: {
             receiver_id: userId,
         },
-        order: [['created_at', 'DESC']],
+
+        include: [
+            {
+                model: User,
+                as: "sender",
+                attributes: [
+    "id",
+    "first_name",
+    "last_name",
+    "username",
+    "email",
+    "profile_picture",
+],
+            },
+            {
+                model: User,
+                as: "receiver",
+                attributes: [
+    "id",
+    "first_name",
+    "last_name",
+    "username",
+    "email",
+    "profile_picture",
+],
+            },
+        ],
+
+        order: [["created_at", "DESC"]],
+
     });
+
 }
 
 async findSent(userId) {
+
     return CoupleInvitation.findAll({
+
         where: {
             sender_id: userId,
         },
-        order: [['created_at', 'DESC']],
+
+        include: [
+            {
+                model: User,
+                as: "sender",
+                attributes: [
+    "id",
+    "first_name",
+    "last_name",
+    "username",
+    "email",
+    "profile_picture",
+],
+            },
+            {
+                model: User,
+                as: "receiver",
+                attributes: [
+    "id",
+    "first_name",
+    "last_name",
+    "username",
+    "email",
+    "profile_picture",
+],
+            },
+        ],
+
+        order: [["created_at", "DESC"]],
+
     });
+
 }
 }
 

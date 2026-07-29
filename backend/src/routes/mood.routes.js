@@ -12,15 +12,6 @@ router.post(
     moodController.createMood
 );
 
-router.get(
-    '/today',
-    moodController.getTodayMood
-);
-
-router.put(
-    '/today',
-    moodController.updateTodayMood
-);
 
 router.get(
     '/history',

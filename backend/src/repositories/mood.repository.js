@@ -10,15 +10,6 @@ class MoodRepository {
         return Mood.findByPk(id);
     }
 
-    async findTodayMood(userId, moodDate) {
-        return Mood.findOne({
-            where: {
-                user_id: userId,
-                mood_date: moodDate,
-            },
-        });
-    }
-
     async findMoodHistory(userId, limit = 30) {
         return Mood.findAll({
             where: {

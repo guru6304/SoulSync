@@ -2,23 +2,29 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+import { ThemeProvider } from "./context/ThemeContext";
 
 import './styles/global.css';
 
 import { Provider } from 'react-redux';
 
 import App from './App';
-import store from './store/store';
+import { store } from "./store/store";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root')
 );
 
 root.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </React.StrictMode>
+    <ThemeProvider>
+
+    <Provider store={store}>
+
+        <App />
+
+    </Provider>
+
+</ThemeProvider>
 );

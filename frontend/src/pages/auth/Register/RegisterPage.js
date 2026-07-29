@@ -50,23 +50,20 @@ const RegisterPage = () => {
     dispatch(loginStart());
 
     try {
-      const response = await authService.register(values);
 
-      const { user, accessToken, refreshToken } = response.data;
+const response = await authService.register(values);
 
-      localStorage.setItem("token", accessToken);
+const { user, accessToken, refreshToken } = response;
 
-      localStorage.setItem("refreshToken", refreshToken);
+dispatch(
+    loginSuccess({
+        user,
+        accessToken,
+        refreshToken,
+    }),
+);
 
-      dispatch(
-        loginSuccess({
-          user,
-
-          token: accessToken,
-        }),
-      );
-
-      navigate("/");
+navigate("/");
     } catch (error) {
       dispatch(
         loginFailure(error.response?.data?.message || "Registration failed."),

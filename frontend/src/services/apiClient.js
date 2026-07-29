@@ -8,11 +8,13 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
+    const token = localStorage.getItem("accessToken");
 
-    const token = localStorage.getItem('token');
-
-    if (token) {
+    // Fix: Only add the header if token is not null, not undefined, and not the literal string "undefined"
+    if (token && token !== 'undefined' && token !== 'null') {
         config.headers.Authorization = `Bearer ${token}`;
+    } else {
+        console.warn("API Call attempted without a valid token");
     }
 
     return config;

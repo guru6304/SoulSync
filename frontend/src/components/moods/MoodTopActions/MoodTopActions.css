@@ -1,0 +1,53 @@
+.ss-mood-top-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:24px;
+
+}
+
+.ss-mood-top-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:999px;
+
+    cursor:pointer;
+
+    background:var(--button-bg);
+
+    color:var(--button-text);
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+.ss-mood-top-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.ss-mood-top-btn:active{
+
+    transform:scale(.98);
+
+}

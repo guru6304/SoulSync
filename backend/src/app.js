@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const { notFound, errorHandler } = require('./middlewares/error.middleware');
 
 const authRoutes = require('./routes/auth.routes');
+const coupleInvitationRoutes = require('./routes/coupleInvitation.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const memoryRoutes = require('./routes/memory.routes');
 const moodRoutes = require('./routes/mood.routes');
@@ -16,6 +17,8 @@ const healthRoutes = require('./routes/health.routes');
 const questionRoutes = require('./routes/question.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const answerRoutes = require('./routes/answer.routes');
+const saySomethingRoutes =
+    require("./routes/saySomething.routes");
 
 const app = express();
 
@@ -45,6 +48,14 @@ app.use(
 app.use(
     '/api/v1/profile',
     profileRoutes
+);
+app.use(
+    '/api/v1/couple-invitations',
+    coupleInvitationRoutes
+);
+app.use(
+    "/api/v1/say-somethings",
+    saySomethingRoutes
 );
 app.use('/api/v1/uploads', uploadRoutes);
 app.use('/api/v1/health', healthRoutes);

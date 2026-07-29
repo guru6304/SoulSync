@@ -1,43 +1,60 @@
-const { Couple, CoupleMember, User } = require('../models');
+const { Couple, CoupleMember, User } = require("../models");
 
 class CoupleRepository {
-    async create(data = {}, transaction = null) {
-        return Couple.create(data, { transaction });
-    }
+  async create(data = {}, transaction = null) {
+    return Couple.create(data, { transaction });
+  }
 
-    async findById(id) {
-        return Couple.findByPk(id);
-    }
+  async findById(id) {
+    return Couple.findByPk(id, {
+      include: [
+        {
+          model: CoupleMember,
 
-    async delete(id, transaction = null) {
-        return Couple.destroy({
-            where: { id },
-            transaction,
-        });
-    }
+          as: "members",
 
-    async findMembership(userId, coupleId) {
-        return CoupleMember.findOne({
-            where: {
-                user_id: userId,
-                couple_id: coupleId,
+          include: [
+            {
+              model: User,
+
+              as: "user",
             },
-        });
-    }
+          ],
+        },
+      ],
+    });
+  }
 
-    async findMembershipByUserId(userId) {
-        return CoupleMember.findOne({
-            where: {
-                user_id: userId,
-            },
-        });
-    }
-    async findActiveCoupleByUserId(userId) {
+  async delete(id, transaction = null) {
+    return Couple.destroy({
+      where: { id },
+      transaction,
+    });
+  }
+
+  async findMembership(userId, coupleId) {
+    return CoupleMember.findOne({
+      where: {
+        user_id: userId,
+        couple_id: coupleId,
+      },
+    });
+  }
+
+  async findMembershipByUserId(userId) {
+    return CoupleMember.findOne({
+      where: {
+        user_id: userId,
+      },
+    });
+  }
+  async findActiveCoupleByUserId(userId) {
     return Couple.findOne({
+        attributes: ["id", "status"],
         include: [
             {
                 model: CoupleMember,
-                as: 'members',
+                as: "coupleMembers",
                 where: {
                     user_id: userId,
                 },
@@ -45,44 +62,53 @@ class CoupleRepository {
             },
         ],
         where: {
-            status: 'active',
+            status: "active",
         },
     });
 }
 
-    async addMembers(members, transaction = null) {
-        return CoupleMember.bulkCreate(
-            members,
-            { transaction }
-        );
-    }
+  async addMembers(members, transaction = null) {
+    return CoupleMember.bulkCreate(members, { transaction });
+  }
 
-    async findMembers(coupleId) {
-        return CoupleMember.findAll({
-            where: {
-                couple_id: coupleId,
-            },
-            include: [
-                {
-                    model: User,
-                    as: 'user',
-                },
-            ],
-        });
-    }
+  async findMembers(coupleId) {
+    return CoupleMember.findAll({
+      where: {
+        couple_id: coupleId,
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    order: [["createdAt", "ASC"]],
+    });
+  }
 
-    async getPartner(userId, coupleId) {
-        const { Op } = require('sequelize');
+  async getPartner(userId, coupleId) {
+    const { Op } = require("sequelize");
 
-        return CoupleMember.findOne({
-            where: {
-                couple_id: coupleId,
-                user_id: {
-                    [Op.ne]: userId,
-                },
-            },
-        });
-    }
+    const partner = await CoupleMember.findOne({
+      where: {
+        couple_id: coupleId,
+
+        user_id: {
+          [Op.ne]: userId,
+        },
+      },
+
+      include: [
+        {
+          model: User,
+
+          as: "user",
+        },
+      ],
+    });
+
+    return partner?.user ?? null;
+  }
 }
 
 module.exports = new CoupleRepository();

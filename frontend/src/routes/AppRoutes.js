@@ -1,55 +1,78 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import WriteLetterPage from "../pages/letters/WriteLetterPage";
+import CreateMemoryPage from "../pages/memories/CreateMemoryPage";
+import SaySomethingPage from "../pages/saySomething/SaySomethingPage";
+import LoginPage from "../pages/auth/Login/LoginPage";
+import MemoriesPage from "../pages/memories/MemoriesPage";
+import LettersPage from "../pages/letters/LettersPage";
+import QuestionsPage from "../pages/questions/QuestionsPage";
+import RegisterPage from "../pages/auth/Register/RegisterPage";
+import DashboardPage from "../pages/dashboard/DashboardPage";
+import MoodsPage from "../pages/moods/MoodsPage";
+import MoodThemePage from "../pages/moods/MoodThemePage";
+import ProfilePage from "../pages/profile/ProfilePage";
+import NotificationPage from "../pages/notifications/NotificationPage";
 
-import LoginPage from '../pages/auth/Login/LoginPage';
-import RegisterPage from '../pages/auth/Register/RegisterPage';
-import DashboardPage from '../pages/dashboard/DashboardPage';
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 
-import ProtectedRoute from './ProtectedRoute';
-import PublicRoute from './PublicRoute';
+import CoupleInvitationPage from "../pages/CoupleInvitation/CoupleInvitationPage";
 
 const AppRoutes = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public */}
 
-    return (
-        <BrowserRouter>
+        <Route path="/" element={<MoodsPage />} />
 
-            <Routes>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
 
-                <Route
-                    path="/login"
-                    element={
-                        <PublicRoute>
-                            <LoginPage />
-                        </PublicRoute>
-                    }
-                />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
 
-                <Route
-                    path="/register"
-                    element={
-                        <PublicRoute>
-                            <RegisterPage />
-                        </PublicRoute>
-                    }
-                />
+        {/* Protected */}
 
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute>
-                            <DashboardPage />
-                        </ProtectedRoute>
-                    }
-                />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
 
-                <Route
-                    path="*"
-                    element={<Navigate to="/" replace />}
-                />
+          <Route path="/moods/:moodId" element={<MoodThemePage />} />
 
-            </Routes>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/memories" element={<MemoriesPage />} />
 
-        </BrowserRouter>
-    );
+          <Route path="/letters" element={<LettersPage />} />
+
+          <Route path="/questions" element={<QuestionsPage />} />
+
+          <Route path="/notifications" element={<NotificationPage />} />
+
+          <Route path="/couple-invitation" element={<CoupleInvitationPage />} />
+
+          <Route path="/letters/write" element={<WriteLetterPage />} />
+
+          <Route path="/memories/create" element={<CreateMemoryPage />} />
+
+          <Route path="/say-something" element={<SaySomethingPage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default AppRoutes;

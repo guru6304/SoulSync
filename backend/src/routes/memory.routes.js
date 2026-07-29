@@ -14,6 +14,8 @@ router.post('/', controller.createMemory);
 
 router.get('/couple/:coupleId', controller.listMemories);
 
+router.get("/:memoryId", controller.getMemory);
+
 router.put('/:memoryId', controller.updateMemory);
 
 router.delete('/:memoryId', controller.deleteMemory);

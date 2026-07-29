@@ -79,7 +79,7 @@ class DashboardRepository {
                 },
             ],
             order: [['created_at', 'DESC']],
-            limit,
+            limit:5,
         });
     }
 

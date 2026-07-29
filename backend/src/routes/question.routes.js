@@ -5,6 +5,7 @@ const router = express.Router();
 const questionController = require('../controllers/question.controller');
 const { authMiddleware } = require('../middlewares/auth.middleware');
 
+router.use(authMiddleware);
 router.get(
     '/',
     authMiddleware,
@@ -43,5 +44,11 @@ router.get(
     '/today/:mood',
     authMiddleware,
     questionController.getTodaysQuestion
+);
+
+router.get(
+    '/daily/:mood',
+    authMiddleware,
+    questionController.getDailySoulCard
 );
 module.exports = router;

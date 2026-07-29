@@ -3,6 +3,7 @@ const { hashPassword, comparePassword } = require('../utils/password');
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../utils/jwt');
 const { hashToken } = require('../utils/token');
 const { validateRegister, validateLogin } = require('../validations/auth.validation');
+const coupleService = require("../services/couple.service");
 const userRepository = require('../repositories/user.repository');
 const refreshTokenRepository = require('../repositories/refreshToken.repository');
 
@@ -17,14 +18,14 @@ const createTokens = async (userId, metadata = {}) => {
   const refreshToken = generateRefreshToken(payload);
   const refreshPayload = verifyRefreshToken(refreshToken);
 
-  await refreshTokenRepository.createToken({
+ await refreshTokenRepository.create({
     user_id: userId,
     token_hash: hashToken(refreshToken),
     device_name: metadata.device_name,
     ip_address: metadata.ip_address,
     user_agent: metadata.user_agent,
     expires_at: new Date(refreshPayload.exp * 1000),
-  });
+});
 
   return { accessToken, refreshToken };
 };
@@ -50,10 +51,28 @@ const register = async (data) => {
     username,
     email,
     password_hash,
-  });
+    is_active: true,
+});
   const tokens = await createTokens(createdUser.id, data);
 
-  return { user: toPublicUser(createdUser), ...tokens };
+const activeCouple =
+    await coupleService.getActiveCouple(
+        createdUser.id
+    );
+
+return {
+
+    user: {
+
+        ...toPublicUser(createdUser),
+
+        active_couple: activeCouple,
+
+    },
+
+    ...tokens,
+
+};
 };
 
 const login = async (data) => {
@@ -71,7 +90,24 @@ const login = async (data) => {
   await userRepository.updateLastLogin(user.id);
   const tokens = await createTokens(user.id, data);
 
-  return { user: toPublicUser(user), ...tokens };
+const activeCouple =
+    await coupleService.getActiveCouple(
+        user.id
+    );
+
+return {
+
+    user: {
+
+        ...toPublicUser(user),
+
+        active_couple: activeCouple,
+
+    },
+
+    ...tokens,
+
+};
 };
 
 const refresh = async (refreshToken) => {
@@ -84,11 +120,11 @@ const refresh = async (refreshToken) => {
 
   const storedToken = await refreshTokenRepository.findByHash(hashToken(refreshToken));
   if (!storedToken || storedToken.expires_at <= new Date()) {
-    if (storedToken) await refreshTokenRepository.deleteToken(storedToken.id);
+    if (storedToken) await refreshTokenRepository.delete(storedToken.id);
     throw new ApiError(401, 'Invalid or expired refresh token');
   }
 
-  await refreshTokenRepository.deleteToken(storedToken.id);
+  await refreshTokenRepository.delete(storedToken.id);
   return createTokens(payload.sub, storedToken);
 };
 
@@ -96,9 +132,10 @@ const logout = async (refreshToken) => {
   if (!refreshToken) throw new ApiError(400, 'Refresh token is required');
 
   const storedToken = await refreshTokenRepository.findByHash(hashToken(refreshToken));
-  if (storedToken) await refreshTokenRepository.deleteToken(storedToken.id);
+  if (storedToken) await refreshTokenRepository.delete(storedToken.id);
 };
 
-const logoutAll = async (userId) => refreshTokenRepository.deleteAllForUser(userId);
+const logoutAll = async (userId) =>
+    refreshTokenRepository.revokeAll(userId);
 
 module.exports = { register, login, refresh, logout, logoutAll };

@@ -64,10 +64,6 @@ Mood.init(
             {
                 fields: ['mood_date'],
             },
-            {
-                unique: true,
-                fields: ['user_id', 'mood_date'],
-            },
         ],
     }
 );

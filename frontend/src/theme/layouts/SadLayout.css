@@ -1,0 +1,29 @@
+.sad-layout{
+
+    width:100%;
+
+    padding:40px;
+
+}
+
+.sad-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+    margin:35px 0;
+
+}
+
+@media(max-width:992px){
+
+    .sad-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

@@ -1,0 +1,21 @@
+.mood-background{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    overflow:hidden;
+}
+
+.background-overlay{
+
+    position:absolute;
+    inset:0;
+
+    background:
+        radial-gradient(circle at top right,
+        rgba(255,255,255,.25),
+        transparent 35%),
+
+        radial-gradient(circle at bottom left,
+        rgba(255,255,255,.15),
+        transparent 30%);
+}

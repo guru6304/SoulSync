@@ -58,6 +58,53 @@ class QuestionService {
 
 }
 
+    async getDailySoulCard(userId, moodType, answeredForDate) {
+
+        let question = await questionRepository.findRandomUnansweredQuestion(
+            userId,
+            moodType,
+            answeredForDate
+        );
+
+        if (!question) {
+
+            const allQuestions =
+                await questionRepository.findByMood(moodType);
+
+            if (!allQuestions.length) {
+                throw new ApiError(
+                    404,
+                    "No Soul Cards available for this mood."
+                );
+            }
+
+            question =
+                allQuestions[
+                    Math.floor(Math.random() * allQuestions.length)
+                ];
+        }
+
+        const totalQuestions =
+            await questionRepository.getQuestionCountByMood(
+                moodType
+            );
+
+        const answeredCount =
+            await questionRepository.getAnsweredCount(
+                userId,
+                moodType,
+                answeredForDate
+            );
+
+        return {
+            progress: {
+                answered: answeredCount,
+                total: totalQuestions,
+            },
+            question,
+        };
+    }
+
 }
 
 module.exports = new QuestionService();

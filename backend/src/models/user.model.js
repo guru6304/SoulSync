@@ -30,9 +30,29 @@ User.init(
       unique: true,
     },
     password_hash: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
+  type: DataTypes.STRING(255),
+  allowNull: false,
+},
+
+is_active: {
+  type: DataTypes.BOOLEAN,
+  allowNull: false,
+  defaultValue: true,
+},
+
+last_login_at: {
+  type: DataTypes.DATE,
+  allowNull: true,
+},
+last_login_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+},
+
+profile_picture: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+},
   },
   {
     sequelize,

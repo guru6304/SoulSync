@@ -1,0 +1,55 @@
+.mood-hero{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:70px 40px;
+
+    border-radius:35px;
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(20px);
+
+}
+
+.hero-content{
+
+    text-align:center;
+
+}
+
+.hero-emoji{
+
+    font-size:90px;
+
+    display:block;
+
+    margin-bottom:20px;
+
+}
+
+.hero-content h1{
+
+    color:var(--primary-color);
+
+    font-size:48px;
+
+    margin-bottom:15px;
+
+}
+
+.hero-content p{
+
+    font-size:20px;
+
+    color:#666;
+
+    max-width:650px;
+
+    margin:auto;
+
+}

@@ -65,10 +65,19 @@ const cancelInvitation = asyncHandler(async (req, res) => {
 });
 const getReceivedInvitations = asyncHandler(async (req, res) => {
 
+    console.log("=================================");
+    console.log("Logged In User:", req.user.id);
+
     const invitations =
         await coupleInvitationService.getReceivedInvitations(
             req.user.id
         );
+
+    console.log("Invitations Found:", invitations.length);
+
+console.log(
+    invitations.map(invitation => invitation.toJSON())
+);
 
     res.json(
         new ApiResponse(

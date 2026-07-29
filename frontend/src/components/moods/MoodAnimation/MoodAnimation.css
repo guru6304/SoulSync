@@ -1,0 +1,41 @@
+.mood-animation{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:-1;
+}
+
+.floating-particle{
+
+    position:absolute;
+
+    bottom:-80px;
+
+    font-size:28px;
+
+    opacity:.35;
+
+    animation:floatParticle linear infinite;
+
+}
+
+@keyframes floatParticle{
+
+    from{
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+    }
+
+    to{
+
+        transform:
+            translateY(-120vh)
+            rotate(360deg);
+
+    }
+
+}

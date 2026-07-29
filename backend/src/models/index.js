@@ -6,6 +6,7 @@ const User = require('./user.model');
 const Couple = require('./couple.model');
 const CoupleMember = require('./coupleMember.model');
 const Mood = require('./mood.model');
+const SaySomething = require('./saySomething.model');
 const Memory = require('./memory.model');
 const MemoryComment = require('./memoryComment.model');
 const MemoryMedia = require('./memoryMedia.model');
@@ -20,6 +21,32 @@ const CoupleInvitation = require('./coupleInvitation.model');
 // Associations
 User.belongsToMany(Couple, { through: CoupleMember, foreignKey: 'user_id', as: 'couples' });
 Couple.belongsToMany(User, { through: CoupleMember, foreignKey: 'couple_id', as: 'members' });
+
+/*
+|--------------------------------------------------------------------------
+| Couple Members
+|--------------------------------------------------------------------------
+*/
+
+Couple.hasMany(CoupleMember, {
+    foreignKey: "couple_id",
+    as: "coupleMembers",
+});
+
+CoupleMember.belongsTo(Couple, {
+    foreignKey: "couple_id",
+    as: "couple",
+});
+
+User.hasMany(CoupleMember, {
+    foreignKey: "user_id",
+    as: "coupleMemberships",
+});
+
+CoupleMember.belongsTo(User, {
+    foreignKey: "user_id",
+    as: "user",
+});
 
 User.hasMany(Memory, { foreignKey: 'creator_id', as: 'memories' });
 Memory.belongsTo(User, { foreignKey: 'creator_id', as: 'creator' });
@@ -56,6 +83,32 @@ Notification.belongsTo(User, {
 
 User.hasMany(RefreshToken, { foreignKey: 'user_id', as: 'refreshTokens' });
 RefreshToken.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+/*
+|--------------------------------------------------------------------------
+| Say Something
+|--------------------------------------------------------------------------
+*/
+
+User.hasMany(SaySomething, {
+    foreignKey: 'creator_id',
+    as: 'saySomethings',
+});
+
+SaySomething.belongsTo(User, {
+    foreignKey: 'creator_id',
+    as: 'creator',
+});
+
+Couple.hasMany(SaySomething, {
+    foreignKey: 'couple_id',
+    as: 'saySomethings',
+});
+
+SaySomething.belongsTo(Couple, {
+    foreignKey: 'couple_id',
+    as: 'couple',
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +165,33 @@ AnswerMedia.belongsTo(User, {
     foreignKey: 'uploaded_by',
     as: 'uploadedBy',
 });
-User.hasMany(CoupleInvitation, { foreignKey: 'sender_id', as: 'sentInvitations' });
-CoupleInvitation.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
+/*
+|--------------------------------------------------------------------------
+| Couple Invitations
+|--------------------------------------------------------------------------
+*/
+
+// Sender
+User.hasMany(CoupleInvitation, {
+    foreignKey: "sender_id",
+    as: "sentInvitations",
+});
+
+CoupleInvitation.belongsTo(User, {
+    foreignKey: "sender_id",
+    as: "sender",
+});
+
+// Receiver
+User.hasMany(CoupleInvitation, {
+    foreignKey: "receiver_id",
+    as: "receivedInvitations",
+});
+
+CoupleInvitation.belongsTo(User, {
+    foreignKey: "receiver_id",
+    as: "receiver",
+});
 
 User.hasMany(Mood, {
     foreignKey: 'user_id',
@@ -150,5 +228,6 @@ module.exports = {
     Question,
     Answer,
     AnswerMedia,
-    Mood
+    Mood,
+    SaySomething,
 };

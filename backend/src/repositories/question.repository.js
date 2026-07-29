@@ -68,6 +68,56 @@ class QuestionRepository {
     });
 
 }
+    async findRandomUnansweredQuestion(userId, moodType, answeredForDate) {
+
+        const answeredQuestionIds = await this.getAnsweredQuestionIds(
+            userId,
+            answeredForDate
+        );
+
+        return Question.findOne({
+            where: {
+                mood_type: moodType,
+                is_active: true,
+                id: {
+                    [Op.notIn]: answeredQuestionIds,
+                },
+            },
+            order: Question.sequelize.random(),
+        });
+
+    }
+
+    async getQuestionCountByMood(moodType) {
+
+        return Question.count({
+            where: {
+                mood_type: moodType,
+                is_active: true,
+            },
+        });
+
+    }
+
+    async getAnsweredCount(userId, moodType, answeredForDate) {
+
+        return Answer.count({
+            where: {
+                answered_by: userId,
+                answered_for_date: answeredForDate,
+            },
+            include: [
+                {
+                    model: Question,
+                    as: "question",
+                    where: {
+                        mood_type: moodType,
+                    },
+                },
+            ],
+        });
+
+    }
 }
 
 module.exports = new QuestionRepository();

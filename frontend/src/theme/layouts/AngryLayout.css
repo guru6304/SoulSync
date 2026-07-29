@@ -1,0 +1,23 @@
+.angry-layout{
+
+    width:100%;
+
+    padding:40px;
+
+}
+
+.angry-top{
+
+    margin:35px 0;
+
+}
+
+.angry-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+    gap:25px;
+
+}

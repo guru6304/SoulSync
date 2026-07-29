@@ -95,14 +95,38 @@ transaction
   });
 };
 
-const getAnswerById = async (answerId) => {
-  const answer = await answerRepository.findById(answerId);
+const getAnswerById = async (
+    answerId,
+    userId
+) => {
 
-  if (!answer) {
-    throw new ApiError(404, "Answer not found");
-  }
+    const answer =
+        await answerRepository.findById(
+            answerId
+        );
 
-  return answer;
+    if (!answer) {
+
+        throw new ApiError(
+            404,
+            "Answer not found"
+        );
+
+    }
+
+    if (
+        answer.answered_by !== userId
+    ) {
+
+        throw new ApiError(
+            403,
+            "Permission denied"
+        );
+
+    }
+
+    return answer;
+
 };
 
 const getMyAnswer = async (userId, questionId) => {

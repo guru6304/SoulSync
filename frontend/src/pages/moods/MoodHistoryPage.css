@@ -1,0 +1,45 @@
+.ss-mood-history {
+
+    max-width: 800px;
+
+    margin: auto;
+
+    padding: 32px;
+
+}
+
+.ss-history-card {
+
+    margin-top: 20px;
+
+    padding: 18px;
+
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+
+}
+
+.ss-history-card strong {
+
+    margin-left: 12px;
+
+}
+
+.ss-history-card small {
+
+    display: block;
+
+    margin-top: 8px;
+
+    color: #777;
+
+}
+
+.ss-history-card p {
+
+    margin-top: 12px;
+
+}

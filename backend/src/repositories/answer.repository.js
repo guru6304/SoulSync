@@ -34,11 +34,23 @@ const findOne = (filters) =>
     where: filters,
   });
 
-const update = (id, updateData, transaction = null) =>
-  Answer.update(updateData, {
-    where: { id },
-    transaction,
-  });
+const update = async (
+    id,
+    updateData,
+    transaction = null
+) => {
+
+    await Answer.update(
+        updateData,
+        {
+            where: { id },
+            transaction,
+        }
+    );
+
+    return findById(id);
+
+};
 
 const deleteById = (id, transaction = null) =>
   Answer.destroy({

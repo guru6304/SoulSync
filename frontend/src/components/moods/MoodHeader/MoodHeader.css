@@ -1,0 +1,36 @@
+.mood-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.mood-header__emoji {
+  font-size: 72px;
+  animation: bounce 2.5s infinite;
+}
+
+.mood-header__title {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 15px 0;
+}
+
+.mood-header__quote {
+  font-size: 18px;
+  color: #666;
+  max-width: 700px;
+  margin: auto;
+  line-height: 1.8;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+}

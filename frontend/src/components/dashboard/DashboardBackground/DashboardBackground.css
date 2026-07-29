@@ -1,0 +1,107 @@
+.dashboard-bg{
+    position:relative;
+    min-height:100vh;
+    overflow:hidden;
+    background:
+        linear-gradient(135deg,#ff7eb3 0%,#ff758c 40%,#8e7dff 100%);
+}
+
+.dashboard-bg__content{
+    position:relative;
+    z-index:10;
+}
+
+.bg-gradient{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:.55;
+    animation:floatGradient 14s ease-in-out infinite;
+}
+
+.bg-gradient-1{
+    width:450px;
+    height:450px;
+    background:#ffffff55;
+    top:-120px;
+    left:-120px;
+}
+
+.bg-gradient-2{
+    width:420px;
+    height:420px;
+    background:#ffb8d2;
+    bottom:-150px;
+    right:-120px;
+    animation-delay:2s;
+}
+
+.bg-gradient-3{
+    width:300px;
+    height:300px;
+    background:#b4b0ff;
+    top:40%;
+    left:45%;
+    animation-delay:4s;
+}
+
+.bg-circle{
+    position:absolute;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
+    animation:floatCircle 8s ease-in-out infinite;
+}
+
+.bg-circle-1{
+    width:70px;
+    height:70px;
+    top:18%;
+    left:12%;
+}
+
+.bg-circle-2{
+    width:120px;
+    height:120px;
+    right:8%;
+    top:15%;
+    animation-delay:1s;
+}
+
+.bg-circle-3{
+    width:90px;
+    height:90px;
+    bottom:15%;
+    left:18%;
+    animation-delay:2s;
+}
+
+.bg-circle-4{
+    width:150px;
+    height:150px;
+    bottom:8%;
+    right:15%;
+    animation-delay:3s;
+}
+
+@keyframes floatGradient{
+
+    0%,100%{
+        transform:translateY(0) scale(1);
+    }
+
+    50%{
+        transform:translateY(-30px) scale(1.08);
+    }
+}
+
+@keyframes floatCircle{
+
+    0%,100%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-25px);
+    }
+}

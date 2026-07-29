@@ -1,0 +1,27 @@
+.happy-layout{
+
+    width:100%;
+
+    padding:40px;
+
+}
+
+.happy-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:24px;
+
+}
+
+@media(max-width:992px){
+
+    .happy-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

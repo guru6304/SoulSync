@@ -1,0 +1,15 @@
+.ss-card{
+
+    padding:20px;
+
+    backdrop-filter:blur(18px);
+
+    transition:.35s;
+
+}
+
+.ss-card:hover{
+
+    transform:translateY(-5px);
+
+}

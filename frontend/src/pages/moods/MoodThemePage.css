@@ -1,0 +1,73 @@
+.mood-theme-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.mood-overlay {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 90vh;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(18px);
+  border-radius: 30px;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mood-header {
+  text-align: center;
+  color: white;
+}
+
+.mood-emoji {
+  font-size: 70px;
+}
+
+.mood-header h1 {
+  font-size: 42px;
+  margin: 15px 0;
+}
+
+.mood-header p {
+  font-size: 18px;
+  opacity: .95;
+}
+
+.mood-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 25px;
+  margin-top: 60px;
+}
+
+.mood-card {
+  border: 3px solid;
+  border-radius: 20px;
+  background: white;
+  height: 170px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.mood-card:hover {
+  transform: translateY(-8px);
+}
+
+.dashboard-button {
+  margin-top: auto;
+  align-self: center;
+  color: white;
+  border: none;
+  padding: 16px 45px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+}

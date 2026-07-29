@@ -1,0 +1,27 @@
+.sleepy-layout{
+
+    width:100%;
+
+    padding:40px;
+
+}
+
+.sleepy-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr;
+
+    gap:24px;
+
+    max-width:900px;
+
+    margin:35px auto;
+
+}
+
+.sleepy-grid>*{
+
+    border-radius:24px;
+
+}

@@ -22,6 +22,19 @@ Question.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    options: {
+    type: DataTypes.JSON,
+    allowNull: true,
+},
+priority: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+},
+estimated_seconds: {
+    type: DataTypes.INTEGER,
+    defaultValue: 30,
+},
 
     mood_type: {
       type: DataTypes.ENUM(
@@ -38,10 +51,18 @@ Question.init(
       allowNull: false,
     },
 
-    answer_type: {
-      type: DataTypes.ENUM("text", "image", "video", "audio", "music", "mixed"),
-      allowNull: false,
-    },
+answer_type: {
+  type: DataTypes.ENUM(
+    "text",
+    "yes_no",
+    "rating",
+    "emoji",
+    "multiple_choice",
+    "image",
+    "audio"
+  ),
+  allowNull: false,
+},
 
     display_order: {
       type: DataTypes.INTEGER,

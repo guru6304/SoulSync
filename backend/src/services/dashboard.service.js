@@ -78,15 +78,26 @@ class DashboardService {
     ]);
 
     return {
+      user,
+
       partner,
+
+      hasCouple: true,
+
       todayMood,
+
       recentMemories,
+
       pendingInvitation,
-      memoryCount,
-      photoCount,
-      videoCount,
-      questionAnswered,
-      activities,
+
+      stats: {
+        memoryCount,
+        photoCount,
+        videoCount,
+        questionAnswered,
+      },
+
+      activity: activities,
     };
   }
 

@@ -1,0 +1,53 @@
+.ss-mood-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin:24px 0 32px;
+
+}
+
+.ss-mood-action-btn{
+
+    width:52px;
+
+    height:52px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:none;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    background:var(--card-bg);
+
+    color:var(--primary-color);
+
+    box-shadow:var(--shadow-sm);
+
+    transition:.2s;
+
+}
+
+.ss-mood-action-btn:hover{
+
+    transform:translateY(-3px) scale(1.05);
+
+}
+
+.ss-mood-action-btn:active{
+
+    transform:scale(.96);
+
+}

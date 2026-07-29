@@ -1,0 +1,51 @@
+.funny-layout{
+
+    width:100%;
+
+    padding:40px;
+
+}
+
+.funny-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(12,1fr);
+
+    gap:24px;
+
+}
+
+.funny-grid>*{
+
+    grid-column:span 6;
+
+}
+
+.funny-grid>*:first-child{
+
+    grid-column:1/-1;
+
+}
+
+.funny-grid>*:last-child{
+
+    grid-column:1/-1;
+
+}
+
+@media(max-width:992px){
+
+    .funny-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .funny-grid>*{
+
+        grid-column:auto;
+
+    }
+
+}

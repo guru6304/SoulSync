@@ -1,18 +1,48 @@
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const PublicRoute = ({ children }) => {
 
-    const { isAuthenticated } =
-        useSelector(
-            (state) => state.auth
+    const {
+
+        isAuthenticated,
+
+        user,
+
+        token,
+
+    } = useSelector(
+
+        (state) => state.auth
+
+    );
+
+    if (
+
+        isAuthenticated &&
+
+        user &&
+
+        token
+
+    ) {
+
+        return (
+
+            <Navigate
+
+                to="/dashboard"
+
+                replace
+
+            />
+
         );
 
-    if (isAuthenticated) {
-        return <Navigate to="/" replace />;
     }
 
     return children;
+
 };
 
 export default PublicRoute;

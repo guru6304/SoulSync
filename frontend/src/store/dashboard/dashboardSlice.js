@@ -14,9 +14,21 @@ const initialState = {
 
     activity: null,
 
-    loading: false,
+    loading: {
 
-    error: null,
+        dashboard: false,
+        stats: false,
+        activity: false,
+
+    },
+
+    error: {
+
+        dashboard: null,
+        stats: null,
+        activity: null,
+
+    },
 
 };
 
@@ -30,7 +42,13 @@ const dashboardSlice = createSlice({
 
         clearDashboardError(state) {
 
-            state.error = null;
+            state.error = {
+
+                dashboard: null,
+                stats: null,
+                activity: null,
+
+            };
 
         },
 
@@ -40,77 +58,66 @@ const dashboardSlice = createSlice({
 
         builder
 
-            // Dashboard
-
             .addCase(fetchDashboard.pending, (state) => {
 
-                state.loading = true;
-
-                state.error = null;
+                state.loading.dashboard = true;
+                state.error.dashboard = null;
 
             })
 
             .addCase(fetchDashboard.fulfilled, (state, action) => {
 
-                state.loading = false;
-
+                state.loading.dashboard = false;
                 state.dashboard = action.payload;
 
             })
 
             .addCase(fetchDashboard.rejected, (state, action) => {
 
-                state.loading = false;
-
-                state.error = action.payload;
+                state.loading.dashboard = false;
+                state.error.dashboard = action.payload;
 
             })
 
-            // Stats
-
             .addCase(fetchDashboardStats.pending, (state) => {
 
-                state.loading = true;
+                state.loading.stats = true;
+                state.error.stats = null;
 
             })
 
             .addCase(fetchDashboardStats.fulfilled, (state, action) => {
 
-                state.loading = false;
-
+                state.loading.stats = false;
                 state.stats = action.payload;
 
             })
 
             .addCase(fetchDashboardStats.rejected, (state, action) => {
 
-                state.loading = false;
-
-                state.error = action.payload;
+                state.loading.stats = false;
+                state.error.stats = action.payload;
 
             })
 
-            // Activity
-
             .addCase(fetchDashboardActivity.pending, (state) => {
 
-                state.loading = true;
+                state.loading.activity = true;
+                state.error.activity = null;
 
             })
 
             .addCase(fetchDashboardActivity.fulfilled, (state, action) => {
 
-                state.loading = false;
-
+                state.loading.activity = false;
                 state.activity = action.payload;
 
             })
 
             .addCase(fetchDashboardActivity.rejected, (state, action) => {
 
-                state.loading = false;
-
-                state.error = action.payload;
+                state.loading.activity = false;
+                state.error.activity = action.payload;
 
             });
 

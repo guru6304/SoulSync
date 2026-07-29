@@ -4,7 +4,8 @@ const {
     authMiddleware: authenticate,
 } = require('../middlewares/auth.middleware');
 
-const upload = require('../middlewares/upload.middleware');
+
+const { upload } = require('../middlewares/upload.middleware');
 const controller = require('../controllers/memoryMedia.controller');
 
 const router = express.Router();

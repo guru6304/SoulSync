@@ -18,36 +18,6 @@ const createMood = asyncHandler(async (req, res) => {
     );
 });
 
-const getTodayMood = asyncHandler(async (req, res) => {
-
-    const mood = await moodService.getTodayMood(
-        req.user.id
-    );
-
-    res.status(200).json(
-        new ApiResponse(
-            200,
-            mood
-        )
-    );
-});
-
-const updateTodayMood = asyncHandler(async (req, res) => {
-
-    const mood = await moodService.updateTodayMood(
-        req.user.id,
-        req.body
-    );
-
-    res.status(200).json(
-        new ApiResponse(
-            200,
-            mood,
-            'Mood updated successfully'
-        )
-    );
-});
-
 const getMoodHistory = asyncHandler(async (req, res) => {
 
     const moods = await moodService.getMoodHistory(
@@ -64,7 +34,5 @@ const getMoodHistory = asyncHandler(async (req, res) => {
 
 module.exports = {
     createMood,
-    getTodayMood,
-    updateTodayMood,
     getMoodHistory,
 };

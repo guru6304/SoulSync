@@ -1,0 +1,39 @@
+.ss-edit-letter{
+
+max-width:1100px;
+
+margin:auto;
+
+display:flex;
+
+flex-direction:column;
+
+gap:var(--space-8);
+
+}
+
+.ss-edit-letter__header{
+
+display:flex;
+
+flex-direction:column;
+
+gap:var(--space-5);
+
+}
+
+.ss-edit-letter__header h1{
+
+margin:0;
+
+font-size:2rem;
+
+}
+
+.ss-edit-letter__header p{
+
+margin:6px 0 0;
+
+color:var(--color-text-light);
+
+}

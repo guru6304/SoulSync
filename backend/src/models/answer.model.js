@@ -43,6 +43,14 @@ Answer.init(
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    is_viewed: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+},
+viewed_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+},
   },
   {
     sequelize,

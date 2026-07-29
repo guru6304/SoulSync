@@ -104,6 +104,28 @@ class CoupleService {
 
     return membership;
 }
+async getActiveCouple(userId) {
+
+    const couple =
+        await coupleRepository.findActiveCoupleByUserId(
+            userId
+        );
+
+    if (!couple) {
+
+        return null;
+
+    }
+
+    return {
+
+        id: couple.id,
+
+        status: couple.status,
+
+    };
+
+}
 
 }
 

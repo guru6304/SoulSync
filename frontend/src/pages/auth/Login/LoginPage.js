@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import AuthLayout from "../../../layouts/AuthLayout";
 
 import Card from "../../../components/common/ui/Card/Card";
@@ -8,8 +10,6 @@ import Button from "../../../components/common/ui/Button/Button";
 import useForm from "../../../hooks/useForm";
 
 import validateLogin from "../../../validations/login.validation";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import authService from "../../../services/auth.service";
 
@@ -27,13 +27,15 @@ const LoginPage = () => {
       email: "",
       password: "",
     },
-    validateLogin,
+    validateLogin
   );
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { loading } = useSelector((state) => state.auth);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -44,35 +46,37 @@ const LoginPage = () => {
     dispatch(loginStart());
 
     try {
-      const response = await authService.login(values);
-
-      /*
-            Expected Backend Response
-
-            {
-                success:true,
-                data:{
-                    user:{...},
-                    accessToken:"..."
-                }
-            }
-        */
-
-const { user, accessToken, refreshToken } = response.data;
-
-localStorage.setItem("token", accessToken);
-localStorage.setItem("refreshToken", refreshToken);
-
-dispatch(
-    loginSuccess({
+      const {
         user,
-        token: accessToken,
-    }),
-);
+        accessToken,
+        refreshToken,
+      } = await authService.login(values);
 
-      navigate("/");
+      dispatch(
+        loginSuccess({
+          user,
+          accessToken,
+          refreshToken,
+        })
+      );
+
+      const selectedMood = location.state?.selectedMood;
+
+if (selectedMood) {
+  navigate(`/moods/${selectedMood}`, {
+    replace: true,
+  });
+} else {
+  navigate("/dashboard", {
+    replace: true,
+  });
+}
     } catch (error) {
-      dispatch(loginFailure(error.response?.data?.message || "Login failed."));
+      dispatch(
+        loginFailure(
+          error.response?.data?.message || "Login failed."
+        )
+      );
     }
   };
 
@@ -117,7 +121,7 @@ dispatch(
           </form>
 
           <div className="register-link">
-            Don't have an account?
+            Don't have an account?{" "}
             <Link to="/register">Create Account</Link>
           </div>
         </div>
