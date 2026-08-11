@@ -28,8 +28,11 @@ const limiter = rateLimit({
     message: { status: 429, message: 'Too many requests' }
 });
 
-app.use(helmet());
-app.use(cors());
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || true,
+    credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api/', limiter);
