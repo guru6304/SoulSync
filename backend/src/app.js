@@ -23,14 +23,14 @@ const saySomethingRoutes =
 const app = express();
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, 
+    windowMs: 15 * 60 * 1000,
     max: 100,
     message: { status: 429, message: 'Too many requests' }
 });
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || true,
+    origin: process.env.CORS_ORIGIN,
     credentials: true
 }));
 app.use(morgan('dev'));
