@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+# Soul Sync — Frontend React Application 🎨
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The frontend of Soul Sync is built with **React 18**, **Redux Toolkit**, and modern CSS glassmorphism styling to deliver a romantic, intimate experience for couples.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📁 Architecture Overview
 
-### `npm start`
+```
+frontend/
+├── public/                 # Static assets & SPA client-side routing (_redirects)
+├── src/
+│   ├── components/         # Common UI components & navigation
+│   │   ├── common/         # Buttons, inputs, loaders, bottom floating nav (SSBottomNav)
+│   │   ├── letters/        # LetterEditor & LetterCard components
+│   │   ├── memories/       # MemoryForm & MemoryCard components
+│   │   ├── moods/          # UnifiedMoodHome atmospheric mood viewer
+│   │   └── saySomething/   # MessageCard component
+│   ├── features/           # Feature modules
+│   │   └── questions/      # SoulCard question hero & QuestionAnswer interaction area
+│   ├── hooks/              # Custom React hooks (useQuestions, useMemories, useLetters, etc.)
+│   ├── pages/              # Route views
+│   │   ├── auth/           # Login & Registration pages
+│   │   ├── letters/        # Write & View Love Letters pages
+│   │   ├── memories/       # Create & View Memories pages
+│   │   ├── moods/          # Mood selection, My Answers, Partner Answers pages
+│   │   ├── questions/      # Atmospheric SoulCard Daily Question page
+│   │   ├── saySomething/   # Connect & Say Something pages
+│   │   └── timeline/       # Couple relationship timeline page
+│   ├── routes/             # AppRoutes, ProtectedRoute, & PublicRoute
+│   ├── services/           # Axios apiClient with JWT refresh interceptors
+│   ├── store/              # Redux Toolkit slices (auth, questions, memories, letters, moods)
+│   └── theme/              # Mood themes (romantic, happy, sad, angry, funny, missing_you, sleepy, celebration, need_hug)
+├── package.json
+└── README.md
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🎨 Mood & Atmospheric Theme Engine
 
-### `npm test`
+The frontend dynamically adjusts background gradients, button accents, and floating particle decorations across 9 supported moods:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Romantic ❤️** Pink / Rose (`#EC4899`)
+2. **Happy 😊** Gold / Yellow (`#F59E0B`)
+3. **Sad 😢** Soft Blue / Indigo (`#3B82F6`)
+4. **Angry 😡** Warm Red / Orange (`#EF4444`)
+5. **Funny 😂** Violet / Purple (`#8B5CF6`)
+6. **Missing You 💜** Deep Purple (`#8B5CF6`)
+7. **Sleepy 🌙** Midnight Indigo (`#6366F1`)
+8. **Celebration 🎉** Pink / Gold (`#EC4899` / `#F59E0B`)
+9. **Need a Hug 🫂** Warm Peach / Pink (`#F48FB1`)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ⚙️ Environment Variables
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Create a `.env` file in `frontend/`:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```env
+REACT_APP_API_BASE_URL=http://localhost:5000/api/v1
+```
 
-### `npm run eject`
+For production deployment (e.g. Render), set `REACT_APP_API_BASE_URL` to your backend URL (e.g., `https://soulsync-api.onrender.com/api/v1`).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Commands & Development
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+# Install dependencies
+npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Start local dev server (http://localhost:3000)
+npm start
 
-## Learn More
+# Build production bundle
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ☁️ Deployment on Render
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Create a **Static Site** on Render.
+2. Set **Root Directory** to `frontend`.
+3. Set **Build Command** to `npm install && npm run build`.
+4. Set **Publish Directory** to `build`.
+5. Set `REACT_APP_API_BASE_URL` in **Environment Variables**.
+6. SPA routing is automatically handled via `public/_redirects`.

@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Production Builds & Bundles
+frontend/build/
+dist/
+
+# Environment Files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+backend/logs/
+
+# IDEs & System Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+.agents/
+
+# Local Uploads
+backend/src/uploads/*
+!backend/src/uploads/.gitkeep
+
+# Temporary & Testing Files
+coverage/
+.cache/
