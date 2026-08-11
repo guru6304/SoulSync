@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import AuthLayout from "../../../layouts/AuthLayout";
@@ -23,8 +23,8 @@ import "./RegisterPage.css";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { loading } = useSelector((state) => state.auth);
 
@@ -63,7 +63,17 @@ dispatch(
     }),
 );
 
-navigate("/");
+const pendingMood =
+  location.state?.selectedMood ||
+  localStorage.getItem("pendingSelectedMood");
+
+if (pendingMood) {
+  localStorage.removeItem("pendingSelectedMood");
+  localStorage.setItem("activeMood", pendingMood);
+  navigate(`/moods/${pendingMood}`, { replace: true });
+} else {
+  navigate("/", { replace: true });
+}
     } catch (error) {
       dispatch(
         loginFailure(error.response?.data?.message || "Registration failed."),

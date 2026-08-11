@@ -13,6 +13,7 @@ const answerQuestion = async ({
   media = [],
   cycleNumber = 1,
 }) => {
+  media = Array.isArray(media) ? media : [];
   const question = await questionRepository.findById(questionId);
 
   if (!question) {
@@ -142,6 +143,19 @@ const getMyAnswer = async (userId, questionId) => {
   return answer;
 };
 
+const getMyAnswers = async (userId, moodType = null) => {
+  return answerRepository.findAllMyAnswers(userId, moodType);
+};
+
+const getPartnerAnswers = async (userId, moodType = null) => {
+  const couple = await coupleRepository.findActiveCoupleByUserId(userId);
+  if (!couple) {
+    return [];
+  }
+
+  return answerRepository.findAllPartnerAnswers(couple.id, userId, moodType);
+};
+
 const updateAnswer = async (answerId, userId, content) => {
   const answer = await answerRepository.findById(answerId);
 
@@ -178,6 +192,8 @@ module.exports = {
   answerQuestion,
   getAnswerById,
   getMyAnswer,
+  getMyAnswers,
+  getPartnerAnswers,
   updateAnswer,
   deleteAnswer,
 };

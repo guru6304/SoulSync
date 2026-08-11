@@ -1,224 +1,158 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, PaperPlaneRight } from "@phosphor-icons/react";
+import { ArrowLeft, PaperPlaneRight, Heart } from "@phosphor-icons/react";
 import { useSelector } from "react-redux";
-import { Button, Card } from "../../components/common/ui";
 import MessageCard from "../../components/saySomething/MessageCard";
-
 import useSaySomething from "../../hooks/useSaySomething";
-
+import ThemeProvider from "../../theme/ThemeProvider";
 import "./SaySomethingPage.css";
 
-const SaySomethingPage = () => {
+const SaySomethingContent = () => {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const coupleId = user?.active_couple?.id || user?.active_couple || null;
 
-    const navigate = useNavigate();
-    const { user } = useSelector((state) => state.auth);
+  const { timeline, loading, error, getTimeline, sendMessage } = useSaySomething();
 
-const coupleId = user?.active_couple?.id || user?.active_couple || null;
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-    const {
+  useEffect(() => {
+    if (coupleId) {
+      getTimeline(coupleId);
+    }
+  }, [coupleId, getTimeline]);
 
-        timeline,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!message.trim() || submitting) return;
 
-        loading,
+    setSubmitting(true);
+    try {
+      await sendMessage({
+        couple_id: coupleId,
+        message,
+      });
+      setMessage("");
+      getTimeline(coupleId);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-        error,
-
-        getTimeline,
-
-        sendMessage,
-
-    } = useSaySomething();
-
-    const [message, setMessage] = useState("");
-
-    /*
-        TODO:
-        Replace this with the logged-in user's couple id.
-    */
-
-
-    useEffect(() => {
-
-        if (coupleId) {
-
-            getTimeline(coupleId);
-
-        }
-
-    }, [coupleId,getTimeline]);
-
-    const handleSubmit = async (e) => {
-
-        e.preventDefault();
-
-        if (!message.trim()) {
-
-            return;
-
-        }
-
-        try {
-
-            await sendMessage({
-
-                couple_id: coupleId,
-
-                message,
-
-            });
-
-            setMessage("");
-
-            getTimeline(coupleId);
-
-        } catch (err) {
-
-            console.error(err);
-
-        }
-
-    };
-
-    if (!coupleId) {
+  /* STATE A: PARTNER NOT CONNECTED */
+  if (!coupleId) {
     return (
-        <div className="container py-5 text-center">
+      <div className="ss-say-page-wrapper">
+        <div className="ss-say-disconnected-card">
+          <div className="ss-say-heart-icon">💗</div>
+          <h1>Connect With Your Partner</h1>
+          <p>
+            You haven't connected with your partner yet. Send an invitation to start sharing messages,
+            memories, and moments together.
+          </p>
 
-            <h3 className="mb-3">
-                💌 Connect with your Partner
-            </h3>
-
-            <p className="text-muted mb-4">
-                You haven't connected with your partner yet.
-                Send an invitation to start sharing messages,
-                memories and moments together.
-            </p>
-
-            <button
-                className="btn btn-primary"
-                onClick={() =>
-                    navigate("/couple-invitation")
-                }
-            >
-                Invite Partner ❤️
-            </button>
-
+          <button
+            type="button"
+            className="ss-say-invite-btn"
+            onClick={() => navigate("/couple-invitation")}
+          >
+            <Heart size={20} weight="fill" />
+            <span>Invite Partner ❤️</span>
+          </button>
         </div>
+      </div>
     );
-}
+  }
 
-return (
+  /* STATE B: PARTNER CONNECTED */
+  return (
+    <div className="ss-say-page-wrapper">
+      <div className="ss-say-page-container">
+        {/* Top Header */}
+        <div className="ss-say-top-nav">
+          <button
+            type="button"
+            className="ss-say-back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={18} weight="bold" />
+            <span>Back</span>
+          </button>
 
-        <section className="ss-say-page">
+          <div className="ss-say-connected-pill">
+            <Heart size={16} weight="fill" className="ss-pill-heart" />
+            <span>Connected with Partner</span>
+          </div>
+        </div>
 
-            <Button
+        {/* Composer Card */}
+        <div className="ss-say-composer-card">
+          <div className="ss-say-composer-header">
+            <h1>💬 Say Something</h1>
+            <p>Share what's on your mind and write a heartfelt note to your love.</p>
+          </div>
 
-                variant="ghost"
+          <form onSubmit={handleSubmit} className="ss-say-composer-form">
+            <textarea
+              rows={6}
+              value={message}
+              maxLength={1000}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Write something from your heart..."
+              className="ss-say-glass-textarea"
+            />
 
-                onClick={() => navigate(-1)}
+            <div className="ss-say-composer-footer">
+              <span className="ss-say-counter">{message.length} / 1000</span>
 
-            >
+              <button
+                type="submit"
+                className="ss-say-submit-btn"
+                disabled={submitting || !message.trim()}
+              >
+                {submitting ? (
+                  "Sharing..."
+                ) : (
+                  <>
+                    <PaperPlaneRight size={18} weight="fill" />
+                    <span>Share With My Love 💌</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
 
-                <ArrowLeft size={18} />
+        {/* Timeline Messages List */}
+        <div className="ss-say-timeline-section">
+          <h2 className="ss-say-timeline-title">Recent Thoughts & Moments</h2>
 
-                Back
+          {loading && <p className="ss-say-status-text">Loading shared messages...</p>}
+          {error && <p className="ss-say-status-error">{error}</p>}
 
-            </Button>
+          {!loading && timeline?.length === 0 && (
+            <div className="ss-say-empty-timeline">
+              <p>No messages shared yet. Write your very first thought above! ✨</p>
+            </div>
+          )}
 
-            <Card>
-
-                <h1>Say Something ❤️</h1>
-
-                <p>
-
-                    Send a heartfelt message to your partner.
-
-                </p>
-
-                <form
-
-                    onSubmit={handleSubmit}
-
-                    className="ss-say-form"
-
-                >
-
-                    <textarea
-
-                        rows={8}
-
-                        value={message}
-
-                        maxLength={1000}
-
-                        onChange={(e) =>
-
-                            setMessage(e.target.value)
-
-                        }
-
-                        placeholder="Write something beautiful..."
-
-                    />
-
-                    <div className="ss-say-footer">
-
-                        <span>
-
-                            {message.length}/1000
-
-                        </span>
-
-                        <Button type="submit">
-
-                            <PaperPlaneRight
-
-                                size={18}
-
-                                weight="fill"
-
-                            />
-
-                            Send
-
-                        </Button>
-
-                    </div>
-
-                </form>
-
-            </Card>
-
-            {loading && (
-
-                <p>Loading messages...</p>
-
-            )}
-
-            {error && (
-
-                <p>{error}</p>
-
-            )}
-
-            {!loading &&
-
-                timeline.map((item) => (
-
-                    <MessageCard
-
-                        key={item.id}
-
-                        message={item}
-
-                    />
-
-                ))}
-
-        </section>
-
-    );
-
+          {!loading &&
+            timeline?.map((item) => (
+              <MessageCard key={item.id} message={item} />
+            ))}
+        </div>
+      </div>
+    </div>
+  );
 };
+
+const SaySomethingPage = () => (
+  <ThemeProvider>
+    <SaySomethingContent />
+  </ThemeProvider>
+);
 
 export default SaySomethingPage;

@@ -7,6 +7,18 @@ const answerController = require('../controllers/answer.controller');
 const router = express.Router();
 
 router.get(
+  '/my-answers',
+  authMiddleware,
+  answerController.getMyAnswers
+);
+
+router.get(
+  '/partner-answers',
+  authMiddleware,
+  answerController.getPartnerAnswers
+);
+
+router.get(
   '/:id',
   authMiddleware,
   answerController.getAnswerById

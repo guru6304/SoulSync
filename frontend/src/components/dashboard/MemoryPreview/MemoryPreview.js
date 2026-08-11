@@ -1,46 +1,63 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./MemoryPreview.css";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight, Plus } from "@phosphor-icons/react";
+import "./MemoryPreview.css";
+
 const MemoryPreview = ({ memories = [], onViewAll }) => {
   const navigate = useNavigate();
   const previewMemories = memories.slice(0, 4);
 
-  return (
-    <div className="theme-card">
-        <div className="memory-preview__header">
-          <div>
-            <h2>📸 Memories</h2>
-            <span>Your beautiful moments together</span>
-          </div>
+  const handleViewAll = () => {
+    if (onViewAll) {
+      onViewAll();
+    } else {
+      navigate("/memories");
+    }
+  };
 
-<button
-    className="memory-preview__btn"
-    onClick={onViewAll}
->
-    View All
-</button>
+  const handleAddMemory = () => {
+    navigate("/memories/create");
+  };
+
+  return (
+    <div className="ss-preview-card ss-memory-preview">
+      <div className="ss-preview-header">
+        <div>
+          <h2>📸 Memories</h2>
+          <p>Your beautiful moments together</p>
         </div>
 
-        <div className="memory-preview__grid">
-          {previewMemories.length ? (
-            previewMemories.map((memory) => (
-              <div key={memory.id} className="memory-preview__card">
-                <img src={memory.image} alt={memory.title} />
+        <button className="ss-view-all-btn" onClick={handleViewAll}>
+          <span>View All</span>
+          <ArrowRight size={16} weight="bold" />
+        </button>
+      </div>
 
-                <div className="memory-preview__overlay">
+      <div className="ss-preview-body">
+        {previewMemories.length ? (
+          <div className="ss-memory-grid">
+            {previewMemories.map((memory) => (
+              <div key={memory.id} className="ss-memory-item">
+                <img src={memory.image || memory.imageUrl} alt={memory.title} />
+                <div className="ss-memory-overlay">
                   <h4>{memory.title}</h4>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="memory-preview__empty">
-              <span>💖</span>
-              <h3>No Memories Yet</h3>
-              <p>Create your first beautiful memory together.</p>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="ss-empty-preview">
+            <span className="ss-empty-emoji">💗</span>
+            <h3>No Memories Yet</h3>
+            <p>Create your first beautiful memory together.</p>
+            <button className="ss-empty-cta-btn" onClick={handleAddMemory}>
+              <Plus size={16} weight="bold" />
+              <span>Add Memory</span>
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -48,11 +65,6 @@ const MemoryPreview = ({ memories = [], onViewAll }) => {
 MemoryPreview.propTypes = {
   memories: PropTypes.array,
   onViewAll: PropTypes.func,
-};
-
-MemoryPreview.defaultProps = {
-  memories: [],
-  onViewAll: () => {},
 };
 
 export default MemoryPreview;

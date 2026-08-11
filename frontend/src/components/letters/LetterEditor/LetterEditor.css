@@ -1,202 +1,228 @@
-.ss-letter-editor{
+/* ==========================================================================
+   SOUL SYNC — WRITE LOVE LETTER (DESKTOP REDESIGN)
+   ========================================================================== */
 
-display:grid;
-
-grid-template-columns:2fr 1fr;
-
-gap:var(--space-6);
-
+.ss-letter-editor-container {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
 }
 
-.ss-letter-editor__left,
-.ss-letter-editor__right{
-
-display:flex;
-
-flex-direction:column;
-
-gap:var(--space-6);
-
+.ss-letter-main-column,
+.ss-letter-side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.ss-letter-editor__section{
-
-display:flex;
-
-flex-direction:column;
-
-gap:12px;
-
-margin-top:20px;
-
+/* Paper Surface Cards */
+.ss-paper-title-card,
+.ss-paper-editor-card,
+.ss-side-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 1.75rem;
+  padding: 1.75rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-.ss-letter-editor textarea{
-
-width:100%;
-
-resize:vertical;
-
-min-height:420px;
-
-padding:18px;
-
-border:1px solid var(--color-border);
-
-border-radius:16px;
-
-background:var(--color-surface);
-
-font-family:inherit;
-
-font-size:15px;
-
-line-height:1.8;
-
-outline:none;
-
+.ss-field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
 }
 
-.ss-letter-editor textarea:focus{
-
-border-color:var(--color-primary);
-
+.ss-label-icon {
+  color: #ec4899;
 }
 
-.ss-mood-list{
-
-display:flex;
-
-flex-wrap:wrap;
-
-gap:10px;
-
+.ss-title-paper-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a202c;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
-.ss-mood-list button{
-
-border:none;
-
-padding:10px 16px;
-
-border-radius:999px;
-
-cursor:pointer;
-
-background:var(--color-surface-hover);
-
-transition:.25s;
-
+.ss-title-paper-input::placeholder {
+  color: #a0aec0;
+  font-weight: 500;
 }
 
-.ss-mood-list button.active{
-
-background:var(--color-primary);
-
-color:#fff;
-
+.ss-paper-textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: rgba(255, 253, 250, 0.7);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #2d3748;
+  resize: vertical;
+  min-height: 420px;
+  font-family: inherit;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
-.ss-pin-letter{
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-margin:22px 0;
-
-font-weight:600;
-
+.ss-paper-textarea::placeholder {
+  color: #a0aec0;
+  font-style: italic;
 }
 
-.ss-letter-stats{
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:16px;
-
-margin:24px 0;
-
+/* Side Card Titles & Mood Chips */
+.ss-side-card-title {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
 }
 
-.ss-letter-stats div{
-
-text-align:center;
-
-padding:18px;
-
-border-radius:16px;
-
-background:var(--color-surface-hover);
-
+.ss-mood-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.ss-letter-stats strong{
-
-display:block;
-
-font-size:1.3rem;
-
+.ss-mood-chip {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.ss-letter-stats span{
-
-font-size:.85rem;
-
-color:var(--color-text-light);
-
+.ss-mood-chip:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
 }
 
-.ss-preview-header{
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-font-weight:600;
-
-margin-bottom:18px;
-
+.ss-mood-chip.active {
+  background: #ec4899;
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
 }
 
-.ss-letter-preview{
-
-padding:24px;
-
-border-radius:18px;
-
-background:#fffdf8;
-
-min-height:320px;
-
-font-family:"Georgia",serif;
-
-line-height:2;
-
-box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);
-
+/* Stats Row */
+.ss-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.ss-letter-preview h2{
-
-margin-top:0;
-
-margin-bottom:20px;
-
+.ss-stat-box {
+  text-align: center;
+  padding: 0.85rem 0.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.6);
 }
 
-@media(max-width:992px){
-
-.ss-letter-editor{
-
-grid-template-columns:1fr;
-
+.ss-stat-box strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #1a202c;
 }
 
+.ss-stat-box span {
+  font-size: 0.75rem;
+  color: #718096;
+}
+
+/* Save Letter Button */
+.ss-save-letter-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.5rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+  transition: all 0.25s ease;
+}
+
+.ss-save-letter-btn:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 30px rgba(236, 72, 153, 0.4);
+}
+
+/* Live Preview */
+.ss-preview-side-card {
+  background: rgba(255, 253, 248, 0.75);
+}
+
+.ss-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.ss-letter-realistic-preview {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+}
+
+.ss-preview-mood-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ec4899;
+  background: #fce7f3;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.ss-letter-realistic-preview h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0 0 1rem;
+}
+
+.ss-preview-body {
+  font-family: "Georgia", serif;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #4a5568;
+}
+
+@media (max-width: 1024px) {
+  .ss-letter-editor-container {
+    grid-template-columns: 1fr;
+  }
 }

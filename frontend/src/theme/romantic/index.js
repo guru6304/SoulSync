@@ -6,24 +6,16 @@ import spacing from "./spacing";
 import radius from "./radius";
 import images from "./images";
 
-export default {
-
-    id: "romantic",
-
-    name: "Romantic",
-
-    colors,
-
-    gradients,
-
-    typography,
-
-    shadows,
-
-    spacing,
-
-    radius,
-
-    images,
-
+const romanticTheme = {
+  id: "romantic",
+  name: "Romantic",
+  colors,
+  gradients,
+  typography,
+  shadows,
+  spacing,
+  radius,
+  images,
 };
+
+export default romanticTheme;

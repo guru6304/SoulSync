@@ -26,6 +26,7 @@ const LoginPage = () => {
     {
       email: "",
       password: "",
+      secret_code: "",
     },
     validateLogin
   );
@@ -60,17 +61,21 @@ const LoginPage = () => {
         })
       );
 
-      const selectedMood = location.state?.selectedMood;
+      const selectedMood =
+        location.state?.selectedMood ||
+        localStorage.getItem("pendingSelectedMood");
 
-if (selectedMood) {
-  navigate(`/moods/${selectedMood}`, {
-    replace: true,
-  });
-} else {
-  navigate("/dashboard", {
-    replace: true,
-  });
-}
+      if (selectedMood) {
+        localStorage.removeItem("pendingSelectedMood");
+        localStorage.setItem("activeMood", selectedMood);
+        navigate(`/moods/${selectedMood}`, {
+          replace: true,
+        });
+      } else {
+        navigate("/", {
+          replace: true,
+        });
+      }
     } catch (error) {
       dispatch(
         loginFailure(
@@ -111,12 +116,22 @@ if (selectedMood) {
               error={errors.password}
             />
 
+            <Input
+              label="Secret Code (Optional)"
+              name="secret_code"
+              type="password"
+              placeholder="Enter your relationship secret code"
+              value={values.secret_code}
+              onChange={handleChange}
+              error={errors.secret_code}
+            />
+
             <div className="forgot-password">
               <Link to="#">Forgot Password?</Link>
             </div>
 
             <Button type="submit" loading={loading}>
-              Login
+              ❤️ Enter Soul Sync
             </Button>
           </form>
 

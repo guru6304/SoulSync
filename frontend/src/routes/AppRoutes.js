@@ -11,7 +11,11 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 import MoodsPage from "../pages/moods/MoodsPage";
 import MoodThemePage from "../pages/moods/MoodThemePage";
 import ProfilePage from "../pages/profile/ProfilePage";
+import TimelinePage from "../pages/timeline/TimelinePage";
 import NotificationPage from "../pages/notifications/NotificationPage";
+
+import MyAnswersPage from "../pages/moods/MyAnswersPage";
+import PartnerAnswersPage from "../pages/moods/PartnerAnswersPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -24,7 +28,6 @@ const AppRoutes = () => {
       <Routes>
         {/* Public */}
 
-        <Route path="/" element={<MoodsPage />} />
 
         <Route
           path="/login"
@@ -47,11 +50,16 @@ const AppRoutes = () => {
         {/* Protected */}
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<MoodsPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
 
           <Route path="/moods/:moodId" element={<MoodThemePage />} />
+          <Route path="/moods/:moodId/card" element={<QuestionsPage />} />
+          <Route path="/moods/:moodId/my-answers" element={<MyAnswersPage />} />
+          <Route path="/moods/:moodId/partner-answers" element={<PartnerAnswersPage />} />
 
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/memories" element={<MemoriesPage />} />
 
           <Route path="/letters" element={<LettersPage />} />

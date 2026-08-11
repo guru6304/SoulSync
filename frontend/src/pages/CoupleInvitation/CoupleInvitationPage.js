@@ -24,7 +24,7 @@ const CoupleInvitationPage = () => {
 
   useEffect(() => {
     getPendingInvitations();
-  }, []);
+  }, [getPendingInvitations]);
 
   const handleInvite = async (e) => {
     e.preventDefault();

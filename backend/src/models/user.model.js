@@ -40,19 +40,18 @@ is_active: {
   defaultValue: true,
 },
 
-last_login_at: {
-  type: DataTypes.DATE,
-  allowNull: true,
-},
-last_login_at: {
-    type: DataTypes.DATE,
-    allowNull: true,
-},
-
-profile_picture: {
-    type: DataTypes.STRING(500),
-    allowNull: true,
-},
+    last_login_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    secret_code: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    profile_picture: {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+    },
   },
   {
     sequelize,

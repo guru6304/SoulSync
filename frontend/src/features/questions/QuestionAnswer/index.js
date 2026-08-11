@@ -1,1 +1,2 @@
-export { default } from "./QuestionAnswer";
+import QuestionAnswer from "./QuestionAnswer";
+export default QuestionAnswer;

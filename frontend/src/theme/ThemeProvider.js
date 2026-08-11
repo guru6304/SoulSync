@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { moodThemes } from "./moodThemes";
 
@@ -7,10 +7,15 @@ const ThemeContext = createContext(null);
 
 const ThemeProvider = ({ children }) => {
   const { moodId } = useParams();
+  const location = useLocation();
+
+  const queryMood = new URLSearchParams(location.search).get("mood");
 
   const theme = useMemo(() => {
-    return moodThemes[moodId] || moodThemes.romantic;
-  }, [moodId]);
+    const rawMood = moodId || queryMood || location.state?.mood || localStorage.getItem("activeMood") || "romantic";
+    const key = rawMood.replace(/-/g, "_");
+    return moodThemes[key] || moodThemes.romantic;
+  }, [location.state?.mood, moodId, queryMood]);
 
   useEffect(() => {
     document.documentElement.style.setProperty(

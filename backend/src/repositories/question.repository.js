@@ -50,42 +50,45 @@ class QuestionRepository {
         return answers.map(answer => answer.question_id);
     }
     async findUnansweredByMood(userId, moodType, answeredForDate) {
-
-    const answeredQuestionIds = await this.getAnsweredQuestionIds(
-        userId,
-        answeredForDate
-    );
-
-    return Question.findAll({
-        where: {
-            mood_type: moodType,
-            is_active: true,
-            id: {
-                [Op.notIn]: answeredQuestionIds,
-            },
-        },
-        order: [['display_order', 'ASC']],
-    });
-
-}
-    async findRandomUnansweredQuestion(userId, moodType, answeredForDate) {
-
         const answeredQuestionIds = await this.getAnsweredQuestionIds(
             userId,
             answeredForDate
         );
 
+        const where = {
+            mood_type: moodType,
+            is_active: true,
+        };
+
+        if (answeredQuestionIds && answeredQuestionIds.length > 0) {
+            where.id = { [Op.notIn]: answeredQuestionIds };
+        }
+
+        return Question.findAll({
+            where,
+            order: [['display_order', 'ASC']],
+        });
+    }
+
+    async findRandomUnansweredQuestion(userId, moodType, answeredForDate) {
+        const answeredQuestionIds = await this.getAnsweredQuestionIds(
+            userId,
+            answeredForDate
+        );
+
+        const where = {
+            mood_type: moodType,
+            is_active: true,
+        };
+
+        if (answeredQuestionIds && answeredQuestionIds.length > 0) {
+            where.id = { [Op.notIn]: answeredQuestionIds };
+        }
+
         return Question.findOne({
-            where: {
-                mood_type: moodType,
-                is_active: true,
-                id: {
-                    [Op.notIn]: answeredQuestionIds,
-                },
-            },
+            where,
             order: Question.sequelize.random(),
         });
-
     }
 
     async getQuestionCountByMood(moodType) {

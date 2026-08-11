@@ -2,19 +2,18 @@ export const moodThemes = {
   romantic: {
     id: "romantic",
     title: "Romantic",
-    emoji: "🥰",
+    emoji: "❤️",
+    emojis: ["❤️", "💕", "💗", "💖", "🌹"],
     quote: "Love is in every heartbeat ❤️",
 
-    primary: "#FF4D88",
-    secondary: "#FFD6E8",
-    accent: "#FF80AB",
+    primary: "#EC4899",
+    secondary: "#F472B6",
+    accent: "#F472B6",
 
-    background: "#FFF5F8",
+    background: "#FFF0F6",
+    gradient: "linear-gradient(135deg, #EC4899 0%, #F472B6 50%, #FFF0F6 100%)",
 
-    gradient:
-      "linear-gradient(135deg, #FF4D88 0%, #FF80AB 50%, #FFD6E8 100%)",
-
-    button: "#FF4D88",
+    button: "#EC4899",
     card: "#FFFFFF",
   },
 
@@ -22,56 +21,53 @@ export const moodThemes = {
     id: "happy",
     title: "Happy",
     emoji: "😊",
-    quote: "Smile together, stay together.",
+    emojis: ["😊", "☀️", "💛", "✨", "🌼"],
+    quote: "Smile together, stay together ☀️",
 
-    primary: "#FDB813",
-    secondary: "#FFE9A8",
-    accent: "#FFD54F",
+    primary: "#F59E0B",
+    secondary: "#FBBF24",
+    accent: "#FBBF24",
 
-    background: "#FFFDF2",
+    background: "#FFFDF0",
+    gradient: "linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #FFFDF0 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#FDB813,#FFD54F,#FFF4C2)",
-
-    button: "#FDB813",
+    button: "#F59E0B",
     card: "#FFFFFF",
   },
 
   sad: {
     id: "sad",
     title: "Sad",
-    emoji: "🌧️",
-    quote: "Even cloudy skies pass.",
+    emoji: "😢",
+    emojis: ["💙", "😢", "🌧️", "☁️", "🫂"],
+    quote: "Even cloudy skies pass. I'm here for you 💙",
 
-    primary: "#4A90E2",
-    secondary: "#D8EAFB",
-    accent: "#7AB6FF",
+    primary: "#3B82F6",
+    secondary: "#60A5FA",
+    accent: "#60A5FA",
 
-    background: "#F4F8FC",
+    background: "#F0F6FF",
+    gradient: "linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #F0F6FF 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#4A90E2,#7AB6FF,#D8EAFB)",
-
-    button: "#4A90E2",
+    button: "#3B82F6",
     card: "#FFFFFF",
   },
 
   angry: {
     id: "angry",
     title: "Angry",
-    emoji: "😠",
-    quote: "Let's solve it together.",
+    emoji: "😡",
+    emojis: ["😡", "❤️🔥", "🔥", "🫶"],
+    quote: "Let's solve it together with warmth and love.",
 
-    primary: "#E53935",
-    secondary: "#FFD9D9",
-    accent: "#FF6B6B",
+    primary: "#EF4444",
+    secondary: "#F97316",
+    accent: "#F97316",
 
-    background: "#FFF5F5",
+    background: "#FFF2F2",
+    gradient: "linear-gradient(135deg, #EF4444 0%, #F97316 50%, #FFF2F2 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#E53935,#FF6B6B,#FFD9D9)",
-
-    button: "#E53935",
+    button: "#EF4444",
     card: "#FFFFFF",
   },
 
@@ -79,56 +75,53 @@ export const moodThemes = {
     id: "funny",
     title: "Funny",
     emoji: "😂",
-    quote: "Laugh louder together!",
+    emojis: ["😂", "🤣", "😜", "🎉", "⭐"],
+    quote: "Laugh louder together! 😂",
 
-    primary: "#FF9800",
-    secondary: "#FFE0B2",
-    accent: "#FFB74D",
+    primary: "#8B5CF6",
+    secondary: "#A855F7",
+    accent: "#A855F7",
 
-    background: "#FFF9F2",
+    background: "#FAF5FF",
+    gradient: "linear-gradient(135deg, #8B5CF6 0%, #A855F7 50%, #FAF5FF 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#FF9800,#FFB74D,#FFE0B2)",
-
-    button: "#FF9800",
+    button: "#8B5CF6",
     card: "#FFFFFF",
   },
 
   missing_you: {
     id: "missing_you",
     title: "Missing You",
-    emoji: "🥺",
-    quote: "Distance never defeats love.",
+    emoji: "💜",
+    emojis: ["💜", "🌙", "✨", "🥺", "🌌"],
+    quote: "Distance never defeats love 💜",
 
-    primary: "#9C27B0",
-    secondary: "#EBD8F5",
-    accent: "#BA68C8",
+    primary: "#8B5CF6",
+    secondary: "#A78BFA",
+    accent: "#A78BFA",
 
-    background: "#FAF6FC",
+    background: "#F5F3FF",
+    gradient: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #F5F3FF 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#9C27B0,#BA68C8,#EBD8F5)",
-
-    button: "#9C27B0",
+    button: "#8B5CF6",
     card: "#FFFFFF",
   },
 
   sleepy: {
     id: "sleepy",
     title: "Sleepy",
-    emoji: "😴",
-    quote: "Sweet dreams, my love.",
+    emoji: "🌙",
+    emojis: ["🌙", "😴", "⭐", "☁️", "💤"],
+    quote: "Sweet dreams, my love 🌙",
 
-    primary: "#607D8B",
-    secondary: "#DCE5EA",
-    accent: "#90A4AE",
+    primary: "#6366F1",
+    secondary: "#818CF8",
+    accent: "#818CF8",
 
-    background: "#F7F9FA",
+    background: "#EEF2FF",
+    gradient: "linear-gradient(135deg, #4338CA 0%, #818CF8 50%, #EEF2FF 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#607D8B,#90A4AE,#DCE5EA)",
-
-    button: "#607D8B",
+    button: "#6366F1",
     card: "#FFFFFF",
   },
 
@@ -136,35 +129,33 @@ export const moodThemes = {
     id: "celebration",
     title: "Celebration",
     emoji: "🎉",
-    quote: "Let's celebrate every little moment.",
+    emojis: ["🎉", "🎊", "🥳", "🎂", "✨"],
+    quote: "Let's celebrate every little moment 🎉",
 
-    primary: "#00C853",
-    secondary: "#D6F8E5",
-    accent: "#69F0AE",
+    primary: "#EC4899",
+    secondary: "#F59E0B",
+    accent: "#F59E0B",
 
-    background: "#F3FFF8",
+    background: "#FFFBEB",
+    gradient: "linear-gradient(135deg, #EC4899 0%, #F59E0B 50%, #FFFBEB 100%)",
 
-    gradient:
-      "linear-gradient(135deg,#00C853,#69F0AE,#D6F8E5)",
-
-    button: "#00C853",
+    button: "#EC4899",
     card: "#FFFFFF",
   },
 
   need_hug: {
     id: "need_hug",
     title: "Need a Hug",
-    emoji: "🤗",
-    quote: "A hug speaks what words cannot.",
+    emoji: "🫂",
+    emojis: ["🫂", "🤗", "❤️", "🧸", "✨"],
+    quote: "A hug speaks what words cannot 🫂",
 
     primary: "#F48FB1",
-    secondary: "#FFE3ED",
-    accent: "#F8BBD0",
+    secondary: "#FB7185",
+    accent: "#FB7185",
 
-    background: "#FFF8FB",
-
-    gradient:
-      "linear-gradient(135deg,#F48FB1,#F8BBD0,#FFE3ED)",
+    background: "#FFF1F2",
+    gradient: "linear-gradient(135deg, #F48FB1 0%, #FB7185 50%, #FFF1F2 100%)",
 
     button: "#F48FB1",
     card: "#FFFFFF",

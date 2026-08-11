@@ -1,9 +1,5 @@
-import { useMemo, useState } from "react";
-
+import React, { useMemo, useState } from "react";
 import { Heart, FloppyDisk, Eye, PencilSimple } from "@phosphor-icons/react";
-
-import { Card, Button, Input } from "../../common/ui";
-
 import "./LetterEditor.css";
 
 const moods = [
@@ -21,10 +17,10 @@ const LetterEditor = ({
   onSubmit,
   initialValues = {
     title: "",
-    mood: "",
+    mood: "Romantic ❤️",
     content: "",
   },
-  submitLabel = "Save Letter",
+  submitLabel = "Save Letter 💌",
 }) => {
   const [form, setForm] = useState(initialValues);
 
@@ -36,7 +32,6 @@ const LetterEditor = ({
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
-
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -45,107 +40,110 @@ const LetterEditor = ({
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     onSubmit?.(form);
   };
 
   return (
-    <form className="ss-letter-editor" onSubmit={submitHandler}>
-      <div className="ss-letter-editor__left">
-        <Card>
-          <Input
-            label="Letter Title"
+    <form className="ss-letter-editor-container" onSubmit={submitHandler}>
+      {/* Left / Main Column */}
+      <div className="ss-letter-main-column">
+        {/* Title Input */}
+        <div className="ss-paper-title-card">
+          <label className="ss-field-label">
+            <Heart size={18} weight="fill" className="ss-label-icon" />
+            <span>Letter Title</span>
+          </label>
+          <input
+            type="text"
             name="title"
             value={form.title}
             onChange={changeHandler}
             placeholder="My Forever Love ❤️"
-            icon={<Heart />}
+            className="ss-title-paper-input"
           />
+        </div>
 
-          <div className="ss-letter-editor__section">
-            <label>
-              <PencilSimple size={18} weight="fill" />
-              Letter
-            </label>
+        {/* Letter Editor Textarea */}
+        <div className="ss-paper-editor-card">
+          <label className="ss-field-label">
+            <PencilSimple size={18} weight="fill" className="ss-label-icon" />
+            <span>Your Heartfelt Letter</span>
+          </label>
 
-            <textarea
-              rows={18}
-              name="content"
-              value={form.content}
-              onChange={changeHandler}
-              placeholder="Start writing from your heart..."
-            />
-          </div>
-        </Card>
+          <textarea
+            rows={16}
+            name="content"
+            value={form.content}
+            onChange={changeHandler}
+            placeholder="Start writing from your heart..."
+            className="ss-paper-textarea"
+          />
+        </div>
       </div>
 
-      <div className="ss-letter-editor__right">
-        <Card>
-          <div className="ss-letter-editor__section">
-            <label>Mood</label>
-
-            <div className="ss-mood-list">
-              {moods.map((mood) => (
-                <button
-                  key={mood}
-                  type="button"
-                  className={form.mood === mood ? "active" : ""}
-                  onClick={() =>
-                    setForm({
-                      ...form,
-                      mood,
-                    })
-                  }
-                >
-                  {mood}
-                </button>
-              ))}
-            </div>
+      {/* Right Column */}
+      <div className="ss-letter-side-column">
+        {/* Mood Selection */}
+        <div className="ss-side-card">
+          <label className="ss-side-card-title">Select Mood</label>
+          <div className="ss-mood-chips-grid">
+            {moods.map((m) => (
+              <button
+                key={m}
+                type="button"
+                className={`ss-mood-chip ${form.mood === m ? "active" : ""}`}
+                onClick={() => setForm({ ...form, mood: m })}
+              >
+                {m}
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div className="ss-letter-stats">
-            <div>
+        {/* Stats Metadata */}
+        <div className="ss-side-card">
+          <label className="ss-side-card-title">Letter Stats</label>
+          <div className="ss-stats-row">
+            <div className="ss-stat-box">
               <strong>{words}</strong>
-
               <span>Words</span>
             </div>
-
-            <div>
+            <div className="ss-stat-box">
               <strong>{form.content.length}</strong>
-
               <span>Characters</span>
             </div>
-
-            <div>
-              <strong>{readingTime} min</strong>
-
+            <div className="ss-stat-box">
+              <strong>{readingTime}m</strong>
               <span>Read</span>
             </div>
           </div>
 
-          <Button type="submit">
-            <FloppyDisk size={18} weight="fill" />
+          <button type="submit" className="ss-save-letter-btn">
+            <FloppyDisk size={20} weight="fill" />
+            <span>{submitLabel}</span>
+          </button>
+        </div>
 
-            {submitLabel}
-          </Button>
-        </Card>
-
-        <Card>
+        {/* Live Preview Card */}
+        <div className="ss-side-card ss-preview-side-card">
           <div className="ss-preview-header">
             <Eye size={18} weight="fill" />
-            Live Preview
+            <span>Live Letter Preview</span>
           </div>
 
-          <article className="ss-letter-preview">
+          <article className="ss-letter-realistic-preview">
+            <div className="ss-preview-mood-tag">{form.mood || "Romantic ❤️"}</div>
             <h2>{form.title || "Untitled Letter"}</h2>
 
-            {(form.content || "Your heartfelt words will appear here...")
-              .split("\n")
-              .map((line, index) => (
-                <p key={index}>{line || <>&nbsp;</>}</p>
-              ))}
+            <div className="ss-preview-body">
+              {(form.content || "Your heartfelt words will appear here...")
+                .split("\n")
+                .map((line, index) => (
+                  <p key={index}>{line || <>&nbsp;</>}</p>
+                ))}
+            </div>
           </article>
-        </Card>
+        </div>
       </div>
     </form>
   );

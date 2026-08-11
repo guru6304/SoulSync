@@ -8,7 +8,7 @@ const userRepository = require('../repositories/user.repository');
 const refreshTokenRepository = require('../repositories/refreshToken.repository');
 
 const toPublicUser = (user) => {
-  const { password_hash, ...publicUser } = user.get({ plain: true });
+  const { password_hash, secret_code, ...publicUser } = user.get({ plain: true });
   return publicUser;
 };
 

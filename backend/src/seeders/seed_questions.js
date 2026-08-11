@@ -1,5 +1,7 @@
 "use strict";
 
+const { v4: uuidv4 } = require("uuid");
+
 const romanticQuestions = require("./questions/romantic.questions");
 const happyQuestions = require("./questions/happy.questions");
 const funnyQuestions = require("./questions/funny.questions");
@@ -25,6 +27,7 @@ module.exports = {
       ...sleepyQuestions,
       ...needHugQuestions,
     ].map((question) => ({
+      id: uuidv4(),
       ...question,
       is_active: true,
       created_at: now,

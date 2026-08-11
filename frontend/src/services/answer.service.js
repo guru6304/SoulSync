@@ -17,6 +17,18 @@ const answerService = {
         );
     },
 
+    getMyAnswers(mood = null) {
+        return apiClient.get(
+            `/answers/my-answers${mood ? `?mood=${mood}` : ''}`
+        );
+    },
+
+    getPartnerAnswers(mood = null) {
+        return apiClient.get(
+            `/answers/partner-answers${mood ? `?mood=${mood}` : ''}`
+        );
+    },
+
     updateAnswer(answerId, content) {
         return apiClient.put(
             `/answers/${answerId}`,

@@ -24,7 +24,8 @@ const answerQuestion = asyncHandler(async (req, res) => {
 
 const getAnswerById = asyncHandler(async (req, res) => {
   const answer = await answerService.getAnswerById(
-    req.params.id
+    req.params.id,
+    req.user.id
   );
 
   return res.status(200).json(
@@ -52,6 +53,36 @@ const getMyAnswer = asyncHandler(async (req, res) => {
         )
     );
 
+});
+
+const getMyAnswers = asyncHandler(async (req, res) => {
+  const answers = await answerService.getMyAnswers(
+    req.user.id,
+    req.query.mood
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      answers,
+      'My answers fetched successfully'
+    )
+  );
+});
+
+const getPartnerAnswers = asyncHandler(async (req, res) => {
+  const answers = await answerService.getPartnerAnswers(
+    req.user.id,
+    req.query.mood
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      answers,
+      'Partner answers fetched successfully'
+    )
+  );
 });
 
 const updateAnswer = asyncHandler(async (req, res) => {
@@ -89,6 +120,8 @@ module.exports = {
     answerQuestion,
     getAnswerById,
     getMyAnswer,
+    getMyAnswers,
+    getPartnerAnswers,
     updateAnswer,
     deleteAnswer,
 };

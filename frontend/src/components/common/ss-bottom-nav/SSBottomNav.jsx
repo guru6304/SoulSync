@@ -1,131 +1,78 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { House, Images, TrendingUp, MessageCircle } from "lucide-react";
+import { useTheme } from "../../../theme/ThemeProvider";
 import "./SSBottomNav.css";
 
-import {
-
-    House,
-
-    Images,
-
-    Heart,
-
-    MessageCircle,
-
-    CalendarDays,
-
-} from "lucide-react";
-
-import { NavLink } from "react-router-dom";
-
-import useTheme from "../../../hooks/useTheme";
-
 const menus = [
-
-    {
-
-        title: "Home",
-
-        icon: House,
-
-        path: "/",
-
-    },
-
-    {
-
-        title: "Memories",
-
-        icon: Images,
-
-        path: "/memories",
-
-    },
-
-    {
-
-        title: "Love",
-
-        icon: Heart,
-
-        path: "/questions",
-
-    },
-
-    {
-
-        title: "Letters",
-
-        icon: MessageCircle,
-
-        path: "/letters",
-
-    },
-
-    {
-
-        title: "Calendar",
-
-        icon: CalendarDays,
-
-        path: "/calendar",
-
-    },
-
+  {
+    title: "Home",
+    icon: House,
+    path: "/",
+  },
+  {
+    title: "Memories",
+    icon: Images,
+    path: "/memories",
+  },
+  {
+    title: "Timeline",
+    icon: TrendingUp,
+    path: "/timeline",
+  },
+  {
+    title: "Letters",
+    icon: MessageCircle,
+    path: "/letters",
+  },
 ];
 
 const SSBottomNav = () => {
+  const themeContext = useTheme();
 
-    const { theme } = useTheme();
+  const navBackground = themeContext?.gradient || "linear-gradient(135deg, #EC4899 0%, #F472B6 100%)";
 
-    return (
+  return (
+    <nav className="ss-bottom-nav">
+      <div
+        className="ss-nav-container"
+        style={{
+          background: navBackground,
+        }}
+      >
+        {menus.map((item) => {
+          const Icon = item.icon;
+          const destination = item.title === "Home"
+            ? `/moods/${themeContext?.id || "romantic"}`
+            : item.path;
 
-        <nav
-
-            className="ss-bottom-nav"
-
-            style={{
-
-                background: theme.gradients.navbar,
-
-                borderColor: theme.colors.border,
-
-            }}
-
-        >
-
-            {
-
-                menus.map((item) => {
-
-                    const Icon = item.icon;
-
-                    return (
-
-                        <NavLink
-
-                            key={item.title}
-
-                            to={item.path}
-
-                            className="ss-nav-item"
-
-                        >
-
-                            <Icon size={22} />
-
-                            <span>{item.title}</span>
-
-                        </NavLink>
-
-                    );
-
-                })
-
-            }
-
-        </nav>
-
-    );
-
+          return (
+            <NavLink
+              key={item.title}
+              to={destination}
+              className={({ isActive }) =>
+                `ss-nav-item ${isActive ? "ss-nav-item--active" : ""}`
+              }
+              style={({ isActive }) =>
+                isActive
+                  ? {
+                      background: "rgba(255, 255, 255, 0.22)",
+                      color: "#FFFFFF",
+                      boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.25)",
+                    }
+                  : {
+                      color: "rgba(255, 255, 255, 0.85)",
+                    }
+              }
+            >
+              <Icon size={20} />
+              <span>{item.title}</span>
+            </NavLink>
+          );
+        })}
+      </div>
+    </nav>
+  );
 };
 
 export default SSBottomNav;

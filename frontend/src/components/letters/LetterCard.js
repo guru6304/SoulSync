@@ -6,7 +6,7 @@ import {
     ArrowRight,
 } from "@phosphor-icons/react";
 
-import { Button, Card } from "../common/ui";
+import { Card } from "../common/ui";
 
 import "./LetterCard.css";
 

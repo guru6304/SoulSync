@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
-import QuestionAnswer from "../QuestionAnswer";
+import { useMemo, useState, useCallback } from "react";
+import { ArrowRight, Eye } from "@phosphor-icons/react";
+import QuestionAnswer from "../QuestionAnswer/QuestionAnswer";
 
 import SoulCardHeader from "./SoulCardHeader";
 import SoulCardProgress from "./SoulCardProgress";
 import SoulCardContent from "./SoulCardContent";
 
-import SoulCardFooter from "./SoulCardFooter";
 import FloatingHearts from "./FloatingHearts";
 import MoodBackground from "./MoodBackground";
 import CardFlipAnimation from "./CardFlipAnimation";
@@ -20,78 +20,77 @@ const SoulCard = ({
   partnerName = "",
   partnerTyping = false,
   onSave,
+  onContinue,
 }) => {
   const [submitted, setSubmitted] = useState(false);
 
-  const successCard = useMemo(
-    () => (
-      <div className="soul-success">
-
-        <div className="soul-success__emoji">
-          💕
-        </div>
-
-        <h2>
-          Your heart has been shared
-        </h2>
-
-        <p>
-          Your answer has been saved and will be available for your partner.
-        </p>
-
-      </div>
-    ),
-    []
-  );
-
-  const handleSave = async (answer) => {
-    await onSave?.(answer);
+  const handleSave = async (answer, media = null) => {
+    await onSave?.(answer, media);
     setSubmitted(true);
   };
 
+  const handleNext = useCallback(() => {
+    setSubmitted(false);
+    onContinue?.();
+  }, [onContinue]);
+
+  const successCard = useMemo(
+    () => (
+      <div className="ss-question-success-container">
+        <div className="ss-success-emoji">💕</div>
+
+        <h2>Answer Saved! ❤️</h2>
+
+        <p className="ss-success-subtitle">
+          <Eye size={20} style={{ verticalAlign: "middle", marginRight: "6px" }} />
+          Your answer has been saved and your partner can now view your response.
+        </p>
+
+        <button
+          className="ss-primary-submit-btn"
+          onClick={handleNext}
+        >
+          <span>Continue Questions</span>
+          <ArrowRight size={20} weight="bold" />
+        </button>
+      </div>
+    ),
+    [handleNext]
+  );
+
   return (
     <MoodBackground mood={mood}>
-
       <FloatingHearts />
 
-      <div className="soul-card-page">
+      <div className="ss-question-atmosphere-page">
+        <div className="ss-question-atmosphere-inner">
+          <SoulCardHeader mood={mood} />
 
-        <SoulCardHeader mood={mood} />
+          <PartnerTypingStatus
+            isTyping={partnerTyping}
+            partnerName={partnerName}
+          />
 
-        <PartnerTypingStatus
-          isTyping={partnerTyping}
-          partnerName={partnerName}
-        />
+          <SoulCardProgress progress={progress} />
 
-        <SoulCardProgress
-          progress={progress}
-        />
+          <CardFlipAnimation
+            flipped={submitted}
+            front={
+              <div className="ss-question-presentation">
+                <SoulCardContent question={question} />
 
-        <CardFlipAnimation
-          flipped={submitted}
-          front={
-            <div className="soul-card">
-
-              <SoulCardContent
-                question={question}
-              />
-
-              <QuestionAnswer
-    question={question}
-    initialValue={initialAnswer}
-    loading={loading}
-    onSave={handleSave}
-/>
-
-            </div>
-          }
-          back={successCard}
-        />
-
-        <SoulCardFooter />
-
+                <QuestionAnswer
+                  question={question}
+                  initialValue={initialAnswer}
+                  loading={loading}
+                  onSave={handleSave}
+                />
+              </div>
+            }
+            back={successCard}
+          />
+        </div>
       </div>
-
     </MoodBackground>
   );
 };

@@ -100,15 +100,15 @@ const questionSlice = createSlice({
 
     builder
       .addCase(getMyAnswer.pending, (state) => {
-        state.loading = true;
+        state.answerLoading = true;
       })
       .addCase(getMyAnswer.fulfilled, (state, action) => {
-        state.loading = false;
+        state.answerLoading = false;
         state.currentAnswer = action.payload;
       })
-      .addCase(getMyAnswer.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+      .addCase(getMyAnswer.rejected, (state) => {
+        state.answerLoading = false;
+        state.currentAnswer = null;
       });
 
     // =============================
@@ -118,11 +118,12 @@ const questionSlice = createSlice({
     builder.addCase(deleteAnswer.fulfilled, (state) => {
       state.currentAnswer = null;
     })
-    .addCase(fetchDailySoulCard.pending,(state)=>{
+.addCase(fetchDailySoulCard.pending,(state)=>{
 
     state.loading=true;
 
     state.error=null;
+    state.currentAnswer=null;
 
 })
 
@@ -143,6 +144,8 @@ const questionSlice = createSlice({
     state.loading=false;
 
     state.error=action.payload;
+    state.dailySoulCard=null;
+    state.progress=null;
 
 });
     

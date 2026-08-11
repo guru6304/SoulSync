@@ -1,9 +1,14 @@
 const ApiError = require('../utils/ApiError');
 const questionRepository = require('../repositories/question.repository');
 
+const normalizeMood = (mood) => (mood || 'romantic').replace(/-/g, '_');
+
 class QuestionService {
 
     async getQuestions(filters) {
+        if (filters && filters.mood_type) {
+            filters.mood_type = normalizeMood(filters.mood_type);
+        }
         return questionRepository.findAll(filters);
     }
 
@@ -18,7 +23,8 @@ class QuestionService {
     }
 
     async getQuestionsByMood(moodType) {
-        return questionRepository.findByMood(moodType);
+        const mood = normalizeMood(moodType);
+        return questionRepository.findByMood(mood);
     }
 
     async createQuestion(data) {
@@ -34,42 +40,42 @@ class QuestionService {
         await this.getQuestion(id);
         await questionRepository.delete(id);
     }
+
     async getTodaysQuestion(userId, moodType, answeredForDate) {
+        const mood = normalizeMood(moodType);
+        const questions =
+            await questionRepository.findUnansweredByMood(
+                userId,
+                mood,
+                answeredForDate
+            );
 
-    const questions =
-        await questionRepository.findUnansweredByMood(
-            userId,
-            moodType,
-            answeredForDate
+        if (!questions.length) {
+            throw new ApiError(
+                404,
+                'No questions available.'
+            );
+        }
+
+        const randomIndex = Math.floor(
+            Math.random() * questions.length
         );
 
-    if (!questions.length) {
-        throw new ApiError(
-            404,
-            'No questions available.'
-        );
+        return questions[randomIndex];
     }
 
-    const randomIndex = Math.floor(
-        Math.random() * questions.length
-    );
-
-    return questions[randomIndex];
-
-}
-
     async getDailySoulCard(userId, moodType, answeredForDate) {
+        const mood = normalizeMood(moodType);
 
         let question = await questionRepository.findRandomUnansweredQuestion(
             userId,
-            moodType,
+            mood,
             answeredForDate
         );
 
         if (!question) {
-
             const allQuestions =
-                await questionRepository.findByMood(moodType);
+                await questionRepository.findByMood(mood);
 
             if (!allQuestions.length) {
                 throw new ApiError(
@@ -86,13 +92,13 @@ class QuestionService {
 
         const totalQuestions =
             await questionRepository.getQuestionCountByMood(
-                moodType
+                mood
             );
 
         const answeredCount =
             await questionRepository.getAnsweredCount(
                 userId,
-                moodType,
+                mood,
                 answeredForDate
             );
 
@@ -104,7 +110,6 @@ class QuestionService {
             question,
         };
     }
-
 }
 
 module.exports = new QuestionService();

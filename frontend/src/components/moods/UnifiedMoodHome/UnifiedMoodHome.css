@@ -1,0 +1,359 @@
+/* ==========================================================================
+   SOUL SYNC — UNIFIED MOOD HOME (DESKTOP-FIRST REDESIGN)
+   ========================================================================== */
+
+.ss-unified-mood-home {
+  min-height: 100vh;
+  background: var(--page-gradient, var(--background-color, #fff5f8));
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #2d3748;
+  transition: background 0.4s ease;
+}
+
+.ss-mood-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 7rem;
+}
+
+/* ==========================================================================
+   1. DAILY SOUL CARD — HERO SECTION
+   ========================================================================== */
+
+.ss-mood-hero {
+  position: relative;
+  border-radius: 2.25rem;
+  padding: 3.5rem 2.5rem;
+  color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  margin-bottom: 3rem;
+  transition: background 0.5s ease, box-shadow 0.3s ease;
+}
+
+/* Hero Ambient Particles */
+.ss-hero-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ss-floating-particle {
+  position: absolute;
+  font-size: 1.6rem;
+  opacity: 0.35;
+  animation: floatParticle 6s ease-in-out infinite alternate;
+}
+
+.ss-floating-particle.p1 { top: 12%; left: 8%; animation-delay: 0s; }
+.ss-floating-particle.p2 { top: 20%; right: 10%; animation-delay: 1.5s; }
+.ss-floating-particle.p3 { bottom: 18%; left: 15%; animation-delay: 3s; }
+.ss-floating-particle.p4 { bottom: 15%; right: 12%; animation-delay: 4.5s; }
+
+@keyframes floatParticle {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.25; }
+  100% { transform: translateY(-18px) rotate(15deg); opacity: 0.5; }
+}
+
+.ss-mood-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* Mood Badge */
+.ss-mood-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.25rem;
+}
+
+.ss-mood-badge__emoji {
+  font-size: 1.25rem;
+}
+
+.ss-mood-hero__title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 0.85rem;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.ss-mood-hero__subtitle {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  margin: 0 0 2.25rem;
+  line-height: 1.6;
+  font-weight: 400;
+  max-width: 32rem;
+}
+
+/* Hero Action Buttons */
+.ss-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.ss-hero-btn {
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ss-hero-btn--primary {
+  background: #ffffff;
+  color: var(--primary-color, #ec4899);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.ss-hero-btn--primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.28);
+}
+
+.ss-hero-btn--secondary {
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.ss-hero-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   2. QUICK ACTIONS TILES
+   ========================================================================== */
+
+.ss-section {
+  margin-bottom: 3.5rem;
+}
+
+.ss-section-header {
+  margin-bottom: 1.5rem;
+}
+
+.ss-section-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0 0 0.3rem;
+  letter-spacing: -0.4px;
+}
+
+.ss-section-header p {
+  color: #718096;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.ss-quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+.ss-action-tile {
+  position: relative;
+  background: #ffffff;
+  border-radius: 1.75rem;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  cursor: pointer;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.ss-action-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Tile 1: Write Letter */
+.ss-action-tile--letter:hover {
+  border-color: #ec4899;
+}
+
+.ss-action-tile--letter .ss-tile__icon-wrapper {
+  background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+  color: #ec4899;
+}
+
+/* Tile 2: Add Memory */
+.ss-action-tile--memory:hover {
+  border-color: #3b82f6;
+}
+
+.ss-action-tile--memory .ss-tile__icon-wrapper {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  color: #3b82f6;
+}
+
+/* Tile 3: Say Something */
+.ss-action-tile--say:hover {
+  border-color: #f59e0b;
+}
+
+.ss-action-tile--say .ss-tile__icon-wrapper {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #f59e0b;
+}
+
+.ss-tile__icon-wrapper {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.ss-action-tile:hover .ss-tile__icon-wrapper {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.ss-tile__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ss-tile__label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #2d3748;
+  margin-bottom: 0.25rem;
+}
+
+.ss-tile__description {
+  font-size: 0.95rem;
+  color: #718096;
+  margin: 0;
+}
+
+.ss-tile__arrow {
+  color: #cbd5e0;
+  transition: all 0.3s ease;
+}
+
+.ss-action-tile:hover .ss-tile__arrow {
+  color: #2d3748;
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   3. DESKTOP TWO-COLUMN LAYOUT (MEMORIES & LOVE LETTERS)
+   ========================================================================== */
+
+.ss-desktop-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.ss-column {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   4. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* Laptop (1280px / 1024px) */
+@media (max-width: 1280px) {
+  .ss-mood-container {
+    max-width: 1140px;
+    padding: 2rem 1.5rem 6rem;
+  }
+
+  .ss-mood-hero__title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .ss-desktop-columns {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .ss-quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile (768px and below) */
+@media (max-width: 768px) {
+  .ss-mood-container {
+    padding: 1.5rem 1rem 6rem;
+  }
+
+  .ss-mood-hero {
+    padding: 2.5rem 1.5rem;
+    border-radius: 1.75rem;
+  }
+
+  .ss-mood-hero__title {
+    font-size: 2rem;
+  }
+
+  .ss-mood-hero__subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .ss-quick-actions-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ss-hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ss-hero-btn {
+    width: 100%;
+  }
+}

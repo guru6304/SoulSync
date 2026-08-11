@@ -50,18 +50,17 @@ const { isAuthenticated } = useSelector(
             onClick={() => {
 
     if (!isAuthenticated) {
-
+        localStorage.setItem("pendingSelectedMood", mood.id);
         navigate("/login", {
             state: {
                 selectedMood: mood.id,
             },
         });
-
         return;
     }
 
+    localStorage.setItem("activeMood", mood.id);
     navigate(`/moods/${mood.id}`);
-
 }}
 
         >

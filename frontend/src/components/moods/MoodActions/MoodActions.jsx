@@ -4,11 +4,18 @@ import {
     NotePencil,
     Image,
     ChatCircleText,
+    Question,
 } from "@phosphor-icons/react";
 
 import "./MoodActions.css";
 
 const actions = [
+    {
+        id: "question",
+        label: "Daily Soul Card",
+        icon: Question,
+        path: "/questions",
+    },
     {
         id: "letter",
         label: "Letter",

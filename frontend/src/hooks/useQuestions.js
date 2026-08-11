@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -39,14 +39,20 @@ const useQuestions = () => {
     if (currentQuestion?.id) {
       dispatch(getMyAnswer(currentQuestion.id));
     }
-  }, [dispatch, currentQuestion]);
+  }, [dispatch, currentQuestion?.id]);
   
   // Refresh Questions
-  const refreshQuestions = async () => {
-    await dispatch(fetchQuestions());
-  };
-  const loadDailySoulCard = (moodType) =>
-  dispatch(fetchDailySoulCard(moodType));
+  const refreshQuestions = useCallback(
+    () => dispatch(fetchQuestions()),
+    [dispatch],
+  );
+
+  // This callback is consumed by a page effect.  Keeping its identity stable
+  // prevents every Redux state update from triggering another Soul Card request.
+  const loadDailySoulCard = useCallback(
+    (moodType) => dispatch(fetchDailySoulCard(moodType)),
+    [dispatch],
+  );
 
   // Answer APIs
   const submitAnswer = (questionId, content, media = null) =>

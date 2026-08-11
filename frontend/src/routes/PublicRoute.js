@@ -31,7 +31,7 @@ const PublicRoute = ({ children }) => {
 
             <Navigate
 
-                to="/dashboard"
+                to="/"
 
                 replace
 

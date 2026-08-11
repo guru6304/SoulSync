@@ -1,93 +1,44 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "@phosphor-icons/react";
 import "./SoulCard.css";
 
-const moodConfig = {
-  romantic: {
-    emoji: "❤️",
-    title: "Today's Soul Card",
-    subtitle: "Open your heart."
-  },
-
-  happy: {
-    emoji: "😊",
-    title: "Share Happiness",
-    subtitle: "Happiness grows when shared."
-  },
-
-  funny: {
-    emoji: "😂",
-    title: "Smile Together",
-    subtitle: "Let's make each other laugh."
-  },
-
-  sad: {
-    emoji: "💙",
-    title: "You Are Not Alone",
-    subtitle: "Share what's inside your heart."
-  },
-
-  angry: {
-    emoji: "😤",
-    title: "Take One Step Together",
-    subtitle: "Understanding starts with listening."
-  },
-
-  missing_you: {
-    emoji: "🥺",
-    title: "Missing You",
-    subtitle: "Distance can't separate hearts."
-  },
-
-  celebration: {
-    emoji: "🎉",
-    title: "Celebrate Love",
-    subtitle: "Every moment deserves celebration."
-  },
-
-  sleepy: {
-    emoji: "🌙",
-    title: "Good Night",
-    subtitle: "End today with love."
-  },
-
-  need_hug: {
-    emoji: "🤗",
-    title: "Virtual Hug",
-    subtitle: "A hug through words."
-  },
+const moodBadges = {
+  romantic: { emoji: "❤️", label: "ROMANTIC" },
+  happy: { emoji: "😊", label: "HAPPY" },
+  funny: { emoji: "😂", label: "FUNNY" },
+  sad: { emoji: "💙", label: "SAD" },
+  angry: { emoji: "😡", label: "ANGRY" },
+  missing_you: { emoji: "💜", label: "MISSING YOU" },
+  celebration: { emoji: "🎉", label: "CELEBRATION" },
+  sleepy: { emoji: "🌙", label: "SLEEPY" },
+  need_hug: { emoji: "🫂", label: "NEED A HUG" },
 };
 
-const SoulCardHeader = ({ mood }) => {
-
-  const data =
-    moodConfig[mood] ||
-    moodConfig.romantic;
+const SoulCardHeader = ({ mood = "romantic" }) => {
+  const navigate = useNavigate();
+  const normalizedMood = mood?.replace(/-/g, "_");
+  const badge = moodBadges[normalizedMood] || moodBadges[mood] || moodBadges.romantic;
 
   return (
+    <div className="ss-question-top-bar">
+      <button
+        type="button"
+        className="ss-back-circle-btn"
+        onClick={() => navigate(`/moods/${mood}`)}
+        title="Back to Mood"
+      >
+        <ArrowLeft size={20} weight="bold" />
+      </button>
 
-    <div className="soul-header">
-
-      <div className="soul-header__emoji">
-
-        {data.emoji}
-
+      <div className="ss-question-mood-badge">
+        <span>{badge.emoji}</span>
+        <span className="ss-badge-label">{badge.label}</span>
       </div>
 
-      <h2>
-
-        {data.title}
-
-      </h2>
-
-      <p>
-
-        {data.subtitle}
-
-      </p>
-
+      <div style={{ width: 40 }} />
     </div>
-
   );
-
 };
 
 export default SoulCardHeader;
