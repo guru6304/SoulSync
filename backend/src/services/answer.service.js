@@ -19,7 +19,11 @@ const answerQuestion = async ({
     throw new ApiError(404, "Question not found");
   }
 
-  if (!content?.trim() && media.length === 0) {
+  const safeContent = typeof content === 'string'
+    ? content.trim()
+    : (content !== null && content !== undefined ? String(content).trim() : '');
+
+  if (!safeContent && media.length === 0) {
     throw new ApiError(400, "Answer content or media is required");
   }
 
@@ -48,7 +52,7 @@ const answerQuestion = async ({
         couple_id: coupleId,
         question_id: questionId,
         answered_by: userId,
-        content: content?.trim() || '',
+        content: safeContent,
         cycle_number: cycleNumber,
         answered_for_date: today,
       },

@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * Migration to make couple_id nullable in both `moods` and `letters` tables
- * so users can create personal moods and letters without requiring an active couple.
+ * Migration to make couple_id nullable in `moods`, `letters`, and `question_answers` tables
+ * so users can log moods, write letters, and submit question answers without requiring an active couple.
  */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -21,6 +21,14 @@ module.exports = {
         allowNull: true,
       });
     }
+
+    const answersColumns = await queryInterface.describeTable('question_answers');
+    if (answersColumns.couple_id && !answersColumns.couple_id.allowNull) {
+      await queryInterface.changeColumn('question_answers', 'couple_id', {
+        type: Sequelize.UUID,
+        allowNull: true,
+      });
+    }
   },
 
   async down(queryInterface, Sequelize) {
@@ -35,6 +43,14 @@ module.exports = {
     const lettersColumns = await queryInterface.describeTable('letters');
     if (lettersColumns.couple_id) {
       await queryInterface.changeColumn('letters', 'couple_id', {
+        type: Sequelize.UUID,
+        allowNull: false,
+      });
+    }
+
+    const answersColumns = await queryInterface.describeTable('question_answers');
+    if (answersColumns.couple_id) {
+      await queryInterface.changeColumn('question_answers', 'couple_id', {
         type: Sequelize.UUID,
         allowNull: false,
       });
