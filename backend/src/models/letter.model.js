@@ -12,7 +12,7 @@ Letter.init(
     },
     couple_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,   // null = personal draft (no couple yet)
     },
     sender_id: {
       type: DataTypes.UUID,

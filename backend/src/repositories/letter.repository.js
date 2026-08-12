@@ -31,6 +31,40 @@ class LetterRepository {
     });
   }
 
+  async findAllByUser(userId) {
+    return Letter.findAll({
+      where: { sender_id: userId },
+      include: [
+        {
+          model: User,
+          as: 'sender',
+          attributes: ['id', 'first_name', 'last_name', 'profile_picture'],
+        },
+      ],
+      order: [['created_at', 'DESC']],
+    });
+  }
+
+  async findAllByCoupleOrUser(coupleId, userId) {
+    const { Op } = require('sequelize');
+    return Letter.findAll({
+      where: {
+        [Op.or]: [
+          { couple_id: coupleId },
+          { sender_id: userId },
+        ],
+      },
+      include: [
+        {
+          model: User,
+          as: 'sender',
+          attributes: ['id', 'first_name', 'last_name', 'profile_picture'],
+        },
+      ],
+      order: [['created_at', 'DESC']],
+    });
+  }
+
   async update(id, data) {
     await Letter.update(data, { where: { id } });
     return this.findById(id);

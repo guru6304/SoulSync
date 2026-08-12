@@ -13,13 +13,11 @@ class MoodService {
   async createMood(user, data) {
     validateOrThrow(validateCreateMood(data));
 
+    // Couple membership is optional — users can log moods solo
     const membership = await coupleRepository.findMembershipByUserId(user.id);
+    const coupleId = membership?.couple_id || null;
 
-    if (!membership) {
-      throw new ApiError(404, "Couple not found");
-    }
-
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split('T')[0];
 
     const existingMood = await moodRepository.findTodayMood(user.id, today);
     if (existingMood) {
@@ -31,7 +29,7 @@ class MoodService {
 
     return moodRepository.create({
       user_id: user.id,
-      couple_id: membership.couple_id,
+      couple_id: coupleId,
       mood_type: data.mood_type,
       note: data.note,
       mood_date: today,

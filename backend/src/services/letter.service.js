@@ -9,30 +9,33 @@ class LetterService {
       throw new ApiError(400, 'Letter content is required');
     }
 
-    const membership = await coupleService.findMembershipByUserId(userId);
-    if (!membership) {
-      throw new ApiError(403, 'You must belong to a couple to write a letter.');
+    // Couple membership is optional — solo draft letters are allowed
+    let coupleId = null;
+    let membership = null;
+    try {
+      membership = await coupleService.findMembershipByUserId(userId);
+      coupleId = membership?.couple_id || null;
+    } catch (_err) {
+      // No couple — letter is saved as a personal draft
     }
 
     const letter = await letterRepository.create({
-      couple_id: membership.couple_id,
+      couple_id: coupleId,
       sender_id: userId,
       title: data.title?.trim() || 'My Forever Love ❤️',
       mood: data.mood || 'Romantic ❤️',
       content: data.content.trim(),
     });
 
-    const partner = await coupleService.getPartner(userId, membership.couple_id);
-    const partnerId = partner?.id;
-
-    if (partnerId) {
-      await notificationService.createSystemNotification(
-        partnerId,
-        userId,
-        'LETTER_CREATED',
-        letter.id,
-        'Your partner wrote you a love letter 💌'
-      );
+    if (coupleId) {
+      const partner = await coupleService.getPartner(userId, coupleId);
+      const partnerId = partner?.id;
+      if (partnerId) {
+        await notificationService.createSystemNotification(
+          partnerId, userId, 'LETTER_CREATED', letter.id,
+          'Your partner wrote you a love letter 💌'
+        );
+      }
     }
 
     return letter;
@@ -43,10 +46,14 @@ class LetterService {
     try {
       membership = await coupleService.findMembershipByUserId(userId);
     } catch (_err) {
-      return [];
+      return letterRepository.findAllByUser(userId);
     }
 
-    return letterRepository.findAllByCouple(membership.couple_id);
+    if (membership?.couple_id) {
+      return letterRepository.findAllByCoupleOrUser(membership.couple_id, userId);
+    }
+
+    return letterRepository.findAllByUser(userId);
   }
 
   async getLetter(userId, letterId) {
@@ -55,7 +62,17 @@ class LetterService {
       throw new ApiError(404, 'Letter not found');
     }
 
-    await coupleService.findMembership(userId, letter.couple_id);
+    if (letter.couple_id) {
+      try {
+        await coupleService.findMembership(userId, letter.couple_id);
+      } catch (_err) {
+        if (letter.sender_id !== userId) {
+          throw new ApiError(403, 'Permission denied');
+        }
+      }
+    } else if (letter.sender_id !== userId) {
+      throw new ApiError(403, 'Permission denied');
+    }
 
     // Mark as read if user is partner receiving the letter
     if (letter.sender_id !== userId && !letter.is_read) {

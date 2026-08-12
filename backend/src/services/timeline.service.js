@@ -5,13 +5,21 @@ const ApiError = require('../utils/ApiError');
 
 class TimelineService {
     async getFeed(userId, page = 1, limit = 10) {
-        // 1. Validate couple membership
-        const membership =
-    await coupleService.findMembershipByUserId(
-        userId
-    );
+        // 1. Validate couple membership — return empty feed if no couple yet
+        let membership;
+        try {
+            membership = await coupleService.findMembershipByUserId(userId);
+        } catch (_err) {
+            return {
+                memories: [],
+                pagination: { totalItems: 0, currentPage: page, totalPages: 0, itemsPerPage: limit }
+            };
+        }
         if (!membership) {
-            throw new ApiError(403, 'You must be part of a couple to view the timeline');
+            return {
+                memories: [],
+                pagination: { totalItems: 0, currentPage: page, totalPages: 0, itemsPerPage: limit }
+            };
         }
 
         // 2. Fetch paginated data
