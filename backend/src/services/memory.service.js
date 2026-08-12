@@ -18,21 +18,8 @@ class MemoryService {
       throw new ApiError(400, "Validation failed", validation.errors);
     }
 
-    let coupleId = data.couple_id || null;
-    if (coupleId) {
-      try {
-        await coupleService.findMembership(userId, coupleId);
-      } catch (_err) {
-        coupleId = null;
-      }
-    } else {
-      try {
-        const membership = await coupleService.findMembershipByUserId(userId);
-        coupleId = membership?.couple_id || null;
-      } catch (_err) {
-        coupleId = null;
-      }
-    }
+    const activeCouple = await coupleService.getRequiredActiveCouple(userId);
+    const coupleId = activeCouple.id;
 
     const memory = await memoryRepository.create({
       id: uuidv4(),

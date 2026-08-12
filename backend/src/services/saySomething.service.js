@@ -27,18 +27,17 @@ class SaySomethingService {
 
     }
 
-    await coupleService.findMembership(
-        userId,
-        data.couple_id
-    );
+    const activeCouple = await coupleService.getRequiredActiveCouple(userId);
+    const coupleId = activeCouple.id;
+
+    const { v4: uuidv4 } = require("uuid");
 
     const saySomething =
         await saySomethingRepository.create({
-
+            id: uuidv4(),
             ...data,
-
+            couple_id: coupleId,
             creator_id: userId,
-
         });
 
     const partner =

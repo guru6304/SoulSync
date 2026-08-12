@@ -3,7 +3,7 @@ const ApiError = require("../utils/ApiError");
 const answerRepository = require("../repositories/answer.repository");
 const answerMediaRepository = require("../repositories/answerMedia.repository");
 const questionRepository = require("../repositories/question.repository");
-const coupleRepository = require("../repositories/couple.repository");
+const coupleService = require("./couple.service");
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -14,6 +14,9 @@ const answerQuestion = async ({
   media = [],
   cycleNumber = 1,
 }) => {
+  const activeCouple = await coupleService.getRequiredActiveCouple(userId);
+  const coupleId = activeCouple.id;
+
   media = Array.isArray(media) ? media : [];
   const question = await questionRepository.findById(questionId);
 
@@ -32,9 +35,6 @@ const answerQuestion = async ({
   if (question.answer_type === "text" && media.length > 0) {
     throw new ApiError(400, "This question accepts text answers only");
   }
-
-  const couple = await coupleRepository.findActiveCoupleByUserId(userId);
-  const coupleId = couple?.id || null;
 
   const today = new Date().toISOString().split('T')[0];
 

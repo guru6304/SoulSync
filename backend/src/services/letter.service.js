@@ -11,15 +11,8 @@ class LetterService {
       throw new ApiError(400, 'Letter content is required');
     }
 
-    // Couple membership is optional — solo draft letters are allowed
-    let coupleId = null;
-    let membership = null;
-    try {
-      membership = await coupleService.findMembershipByUserId(userId);
-      coupleId = membership?.couple_id || null;
-    } catch (_err) {
-      // No couple — letter is saved as a personal draft
-    }
+    const activeCouple = await coupleService.getRequiredActiveCouple(userId);
+    const coupleId = activeCouple.id;
 
     const letter = await letterRepository.create({
       id: uuidv4(),

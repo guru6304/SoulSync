@@ -104,29 +104,25 @@ class CoupleService {
 
     return membership;
 }
-async getActiveCouple(userId) {
+    async getActiveCouple(userId) {
+        const couple = await coupleRepository.findActiveCoupleByUserId(userId);
+        if (!couple) {
+            return null;
+        }
 
-    const couple =
-        await coupleRepository.findActiveCoupleByUserId(
-            userId
-        );
-
-    if (!couple) {
-
-        return null;
-
+        return {
+            id: couple.id,
+            status: couple.status,
+        };
     }
 
-    return {
-
-        id: couple.id,
-
-        status: couple.status,
-
-    };
-
-}
-
+    async getRequiredActiveCouple(userId) {
+        const couple = await coupleRepository.findActiveCoupleByUserId(userId);
+        if (!couple) {
+            throw new ApiError(400, 'Active couple is required');
+        }
+        return couple;
+    }
 }
 
 module.exports = new CoupleService();
