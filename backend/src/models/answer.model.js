@@ -15,7 +15,7 @@ Answer.init(
 
     couple_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
     },
 
     question_id: {

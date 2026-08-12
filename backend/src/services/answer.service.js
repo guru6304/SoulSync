@@ -3,7 +3,6 @@ const ApiError = require("../utils/ApiError");
 const answerRepository = require("../repositories/answer.repository");
 const answerMediaRepository = require("../repositories/answerMedia.repository");
 const questionRepository = require("../repositories/question.repository");
-
 const coupleRepository = require("../repositories/couple.repository");
 
 const answerQuestion = async ({
@@ -28,41 +27,16 @@ const answerQuestion = async ({
     throw new ApiError(400, "This question accepts text answers only");
   }
 
-  if (
-    question.answer_type !== "text" &&
-    question.answer_type !== "mixed" &&
-    content?.trim()
-  ) {
-    throw new ApiError(400, "This question does not accept text");
-  }
-
-  if (
-    question.answer_type !== "mixed" &&
-    question.answer_type !== "text" &&
-    media.length
-  ) {
-    const invalidMedia = media.some(
-      (item) => item.media_type !== question.answer_type,
-    );
-
-    if (invalidMedia) {
-      throw new ApiError(400, "Invalid media type");
-    }
-  }
-
   const couple = await coupleRepository.findActiveCoupleByUserId(userId);
+  const coupleId = couple?.id || null;
 
-  if (!couple) {
-    throw new ApiError(404, "Active couple not found");
-  }
+  const today = new Date().toISOString().split('T')[0];
 
- const today = new Date().toISOString().split('T')[0];
-
-const existingAnswer = await answerRepository.findOne({
+  const existingAnswer = await answerRepository.findOne({
     answered_by: userId,
     question_id: questionId,
     answered_for_date: today,
-});
+  });
 
   if (existingAnswer) {
     throw new ApiError(409, "Question already answered for this cycle");
@@ -70,16 +44,16 @@ const existingAnswer = await answerRepository.findOne({
 
   return answerRepository.transaction(async (transaction) => {
     const answer = await answerRepository.create(
-{
-    couple_id: couple.id,
-    question_id: questionId,
-    answered_by: userId,
-    content: content?.trim() || '',
-    cycle_number: cycleNumber,
-    answered_for_date: today,
-},
-transaction
-);
+      {
+        couple_id: coupleId,
+        question_id: questionId,
+        answered_by: userId,
+        content: content?.trim() || '',
+        cycle_number: cycleNumber,
+        answered_for_date: today,
+      },
+      transaction
+    );
 
     if (media.length) {
       await answerMediaRepository.bulkCreate(
@@ -96,38 +70,18 @@ transaction
   });
 };
 
-const getAnswerById = async (
-    answerId,
-    userId
-) => {
+const getAnswerById = async (answerId, userId) => {
+  const answer = await answerRepository.findById(answerId);
 
-    const answer =
-        await answerRepository.findById(
-            answerId
-        );
+  if (!answer) {
+    throw new ApiError(404, "Answer not found");
+  }
 
-    if (!answer) {
+  if (answer.answered_by !== userId) {
+    throw new ApiError(403, "Permission denied");
+  }
 
-        throw new ApiError(
-            404,
-            "Answer not found"
-        );
-
-    }
-
-    if (
-        answer.answered_by !== userId
-    ) {
-
-        throw new ApiError(
-            403,
-            "Permission denied"
-        );
-
-    }
-
-    return answer;
-
+  return answer;
 };
 
 const getMyAnswer = async (userId, questionId) => {
