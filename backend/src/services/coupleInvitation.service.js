@@ -75,7 +75,9 @@ const receiver =
             );
         }
 
+        const { v4: uuidv4 } = require('uuid');
         return invitationRepository.create({
+            id: uuidv4(),
             sender_id: senderId,
             receiver_id: receiver.id,
             message: data.message || null,

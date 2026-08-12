@@ -26,29 +26,29 @@ const CoupleInvitationPage = () => {
     getPendingInvitations();
   }, [getPendingInvitations]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleInvite = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
+    setIsSubmitting(true);
     try {
       await invitePartner({
-
-    receiver_email: formData.email,
-
-    message: formData.message,
-
-});
+        receiver_email: formData.email,
+        message: formData.message,
+      });
 
       setFormData({
-
-    email: "",
-
-    message: "",
-
-});
+        email: "",
+        message: "",
+      });
 
       alert("Invitation sent successfully ❤️");
     } catch (error) {
       alert(error?.response?.data?.message || "Unable to send invitation.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -92,8 +92,8 @@ const CoupleInvitationPage = () => {
           />
         </div>
 
-        <button className="btn btn-primary" type="submit">
-          Send Invitation
+        <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Sending..." : "Send Invitation"}
         </button>
       </form>
 
