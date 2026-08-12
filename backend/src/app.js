@@ -70,16 +70,6 @@ app.use('/api/v1/uploads', uploadRoutes);
 app.use('/api/v1/health', healthRoutes);
 
 
-const path = require('path');
-const frontendBuildPath = path.join(__dirname, '../../frontend/build');
-app.use(express.static(frontendBuildPath));
-
-app.get(/^(?!\/api).*/, (req, res, next) => {
-  res.sendFile(path.join(frontendBuildPath, 'index.html'), (err) => {
-    if (err) next();
-  });
-});
-
 // Error handlers
 app.use(notFound);
 app.use(errorHandler);
