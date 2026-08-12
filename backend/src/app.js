@@ -30,7 +30,9 @@ const limiter = rateLimit({
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN
+        ? process.env.CORS_ORIGIN.split(',')
+        : true,          // allow all origins when env var not set
     credentials: true
 }));
 app.use(morgan('dev'));

@@ -36,7 +36,12 @@ if (statusCode >= 500) {
   res.status(statusCode).json({
     success: false,
     message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: error.stack }),
+    ...(process.env.NODE_ENV !== 'production' && {
+      error: error.message,
+      stack: error.stack,
+      parent: error.parent?.message,
+      sql: error.sql,
+    }),
   });
 };
 

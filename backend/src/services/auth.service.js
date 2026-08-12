@@ -56,24 +56,20 @@ const register = async (data) => {
 });
   const tokens = await createTokens(createdUser.id, data);
 
-const activeCouple =
-    await coupleService.getActiveCouple(
-        createdUser.id
-    );
+  let activeCouple = null;
+  try {
+    activeCouple = await coupleService.getActiveCouple(createdUser.id);
+  } catch (_err) {
+    // Non-blocking couple lookup
+  }
 
-return {
-
+  return {
     user: {
-
-        ...toPublicUser(createdUser),
-
-        active_couple: activeCouple,
-
+      ...toPublicUser(createdUser),
+      active_couple: activeCouple,
     },
-
     ...tokens,
-
-};
+  };
 };
 
 const login = async (data) => {

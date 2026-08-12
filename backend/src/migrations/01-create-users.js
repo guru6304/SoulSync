@@ -37,6 +37,27 @@ module.exports = {
                 allowNull: false,
             },
 
+            is_active: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+            },
+
+            last_login_at: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
+
+            secret_code: {
+                type: Sequelize.STRING(100),
+                allowNull: true,
+            },
+
+            profile_picture: {
+                type: Sequelize.STRING(500),
+                allowNull: true,
+            },
+
             created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
@@ -46,9 +67,7 @@ module.exports = {
             updated_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal(
-                    'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
-                ),
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
         });
 
