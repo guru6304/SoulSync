@@ -143,7 +143,7 @@ const QuestionAnswer = ({ question, initialValue = "", loading = false, onSave }
 
       {isTextLike && (
         <div className="ss-character-counter">
-          {answer.length} / {MAX_CHARACTERS}
+          {typeof answer === "string" ? answer.length : 0} / {MAX_CHARACTERS}
         </div>
       )}
 
