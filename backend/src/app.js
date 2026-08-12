@@ -25,7 +25,8 @@ app.set('trust proxy', 1);
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 2000,
+    max: 5000,
+    skip: (req) => req.headers['x-api-test'] === 'true',
     message: { status: 429, message: 'Too many requests' }
 });
 

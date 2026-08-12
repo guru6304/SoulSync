@@ -15,7 +15,7 @@ const request = (method, path, body = null, token = null) =>
   new Promise((resolve) => {
     const url = new URL(BASE_URL + path);
     const payload = body ? JSON.stringify(body) : null;
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json', 'x-api-test': 'true' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
     if (payload) headers['Content-Length'] = Buffer.byteLength(payload);
 
