@@ -13,7 +13,7 @@ Memory.init(
     },
     couple_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
     },
     creator_id: {
       type: DataTypes.UUID,

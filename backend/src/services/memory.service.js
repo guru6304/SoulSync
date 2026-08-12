@@ -1,4 +1,5 @@
 const ApiError = require("../utils/ApiError");
+const { v4: uuidv4 } = require("uuid");
 
 const memoryRepository = require("../repositories/memory.repository");
 const coupleService = require("./couple.service");
@@ -17,10 +18,26 @@ class MemoryService {
       throw new ApiError(400, "Validation failed", validation.errors);
     }
 
-    await coupleService.findMembership(userId, data.couple_id);
+    let coupleId = data.couple_id || null;
+    if (coupleId) {
+      try {
+        await coupleService.findMembership(userId, coupleId);
+      } catch (_err) {
+        coupleId = null;
+      }
+    } else {
+      try {
+        const membership = await coupleService.findMembershipByUserId(userId);
+        coupleId = membership?.couple_id || null;
+      } catch (_err) {
+        coupleId = null;
+      }
+    }
 
     const memory = await memoryRepository.create({
+      id: uuidv4(),
       ...data,
+      couple_id: coupleId,
       creator_id: userId,
     });
 

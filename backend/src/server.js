@@ -7,6 +7,18 @@ const { seedQuestionsIfEmpty } = require('./utils/seeder');
 
 const server = http.createServer(app);
 
+const fixNullableCoupleIdColumns = async () => {
+    const tables = ['question_answers', 'letters', 'moods', 'memories', 'say_somethings'];
+    for (const table of tables) {
+        try {
+            await sequelize.query(`ALTER TABLE \`${table}\` MODIFY \`couple_id\` CHAR(36) NULL;`);
+            logger.info(`Successfully set ${table}.couple_id to ALLOW NULL.`);
+        } catch (err) {
+            // Non-fatal if already allows NULL or table doesn't exist yet
+        }
+    }
+};
+
 const startServer = async () => {
     try {
         await sequelize.authenticate();
@@ -18,6 +30,9 @@ const startServer = async () => {
         } catch (syncError) {
             logger.warn('Sequelize sync warning (non-fatal):', syncError.message);
         }
+
+        // Alter existing MySQL tables to allow NULL couple_id
+        await fixNullableCoupleIdColumns();
 
         // Auto-seed questions if table is empty (safe to run every startup)
         await seedQuestionsIfEmpty();
