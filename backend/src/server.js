@@ -10,6 +10,8 @@ const startServer = async () => {
     try {
         await sequelize.authenticate();
         logger.info('Database connected successfully.');
+        await sequelize.sync();
+        logger.info('Database synchronized successfully.');
         server.listen(process.env.PORT || 5000, () => {
             logger.info(`Server running on port ${process.env.PORT || 5000}`);
         });

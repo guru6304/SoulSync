@@ -18,14 +18,15 @@ const createTokens = async (userId, metadata = {}) => {
   const refreshToken = generateRefreshToken(payload);
   const refreshPayload = verifyRefreshToken(refreshToken);
 
- await refreshTokenRepository.create({
-    user_id: userId,
-    token_hash: hashToken(refreshToken),
-    device_name: metadata.device_name,
-    ip_address: metadata.ip_address,
-    user_agent: metadata.user_agent,
-    expires_at: new Date(refreshPayload.exp * 1000),
-});
+  try {
+    await refreshTokenRepository.create({
+      user_id: userId,
+      token_hash: hashToken(refreshToken),
+      expires_at: new Date(refreshPayload.exp * 1000),
+    });
+  } catch (err) {
+    console.error('Refresh token creation warning:', err.message);
+  }
 
   return { accessToken, refreshToken };
 };
@@ -94,24 +95,20 @@ const login = async (data) => {
   }
   const tokens = await createTokens(user.id, data);
 
-const activeCouple =
-    await coupleService.getActiveCouple(
-        user.id
-    );
+  let activeCouple = null;
+  try {
+    activeCouple = await coupleService.getActiveCouple(user.id);
+  } catch (_err) {
+    // Non-blocking couple lookup fallback
+  }
 
-return {
-
+  return {
     user: {
-
-        ...toPublicUser(user),
-
-        active_couple: activeCouple,
-
+      ...toPublicUser(user),
+      active_couple: activeCouple,
     },
-
     ...tokens,
-
-};
+  };
 };
 
 const refresh = async (refreshToken) => {
