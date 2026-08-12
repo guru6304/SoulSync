@@ -6,36 +6,25 @@ const notFound = (req, _res, next) => {
 };
 
 const errorHandler = (error, _req, res, _next) => {
-  const statusCode = error instanceof ApiError ? error.statusCode : 500;
-  const message = error instanceof ApiError ? error.message : 'Internal server error';
+  const isCustomError = error instanceof ApiError || error.name === 'ApiError' || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500);
+  const statusCode = isCustomError ? error.statusCode : 500;
+  const message = error.message || (statusCode === 500 ? 'Internal server error' : 'Request failed');
 
-if (statusCode >= 500) {
-
-  console.log("\n================ ERROR ================\n");
-
-  console.error("Message:", error.message);
-  console.error("Name:", error.name);
-
-  if (error.parent) {
-    console.error("Parent:", error.parent.message);
+  if (statusCode >= 500) {
+    console.error("\n================ 500 ERROR ================");
+    console.error("Message:", error.message);
+    console.error("Name:", error.name);
+    if (error.parent) console.error("Parent:", error.parent.message);
+    if (error.original) console.error("Original:", error.original.message);
+    if (error.sql) console.error("SQL:", error.sql);
+    console.error(error.stack);
+    logger.error(message, error);
   }
-
-  if (error.original) {
-    console.error("Original:", error.original.message);
-  }
-
-  if (error.sql) {
-    console.error("SQL:", error.sql);
-  }
-
-  console.error(error);
-
-  logger.error(message, error);
-}
 
   res.status(statusCode).json({
     success: false,
     message,
+    ...(error.errors && error.errors.length > 0 && { errors: error.errors }),
     ...(process.env.NODE_ENV !== 'production' && {
       error: error.message,
       stack: error.stack,
