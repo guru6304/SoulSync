@@ -17,8 +17,8 @@ const healthRoutes = require('./routes/health.routes');
 const questionRoutes = require('./routes/question.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const answerRoutes = require('./routes/answer.routes');
-const saySomethingRoutes =
-    require("./routes/saySomething.routes");
+const saySomethingRoutes = require("./routes/saySomething.routes");
+const letterRoutes = require('./routes/letter.routes');
 
 const app = express();
 
@@ -38,6 +38,7 @@ app.use(express.json());
 app.use('/api/', limiter);
 
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/letters', letterRoutes);
 app.use('/api/v1/memories', memoryRoutes);
 app.use('/api/v1/moods', moodRoutes);
 app.use('/api/v1/notifications', notificationRoutes);

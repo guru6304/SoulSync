@@ -213,6 +213,14 @@ Mood.belongsTo(Couple, {
     as: 'couple',
 });
 
+const Letter = require('./letter.model');
+
+// Associations for Letter
+User.hasMany(Letter, { foreignKey: 'sender_id', as: 'sentLetters' });
+Letter.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
+Couple.hasMany(Letter, { foreignKey: 'couple_id', as: 'letters' });
+Letter.belongsTo(Couple, { foreignKey: 'couple_id', as: 'couple' });
+
 module.exports = {
     sequelize,
     User,
@@ -230,4 +238,5 @@ module.exports = {
     AnswerMedia,
     Mood,
     SaySomething,
+    Letter,
 };

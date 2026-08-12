@@ -6,49 +6,45 @@ const questionController = require('../controllers/question.controller');
 const { authMiddleware } = require('../middlewares/auth.middleware');
 
 router.use(authMiddleware);
+
 router.get(
     '/',
-    authMiddleware,
     questionController.getQuestions
 );
 
 router.get(
     '/mood/:mood',
-    authMiddleware,
     questionController.getQuestionsByMood
 );
 
 router.get(
-    '/:id',
-    authMiddleware,
-    questionController.getQuestion
-);
-router.post(
-    '/',
-    authMiddleware,
-    questionController.createQuestion
-);
-
-router.put(
-    '/:id',
-    authMiddleware,
-    questionController.updateQuestion
-);
-
-router.delete(
-    '/:id',
-    authMiddleware,
-    questionController.deleteQuestion
-);
-router.get(
     '/today/:mood',
-    authMiddleware,
     questionController.getTodaysQuestion
 );
 
 router.get(
     '/daily/:mood',
-    authMiddleware,
     questionController.getDailySoulCard
 );
+
+router.get(
+    '/:id',
+    questionController.getQuestion
+);
+
+router.post(
+    '/',
+    questionController.createQuestion
+);
+
+router.put(
+    '/:id',
+    questionController.updateQuestion
+);
+
+router.delete(
+    '/:id',
+    questionController.deleteQuestion
+);
+
 module.exports = router;

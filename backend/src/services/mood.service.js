@@ -21,6 +21,14 @@ class MoodService {
 
     const today = new Date().toISOString().split("T")[0];
 
+    const existingMood = await moodRepository.findTodayMood(user.id, today);
+    if (existingMood) {
+      return moodRepository.update(existingMood.id, {
+        mood_type: data.mood_type,
+        note: data.note,
+      });
+    }
+
     return moodRepository.create({
       user_id: user.id,
       couple_id: membership.couple_id,

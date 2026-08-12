@@ -20,6 +20,15 @@ class MoodRepository {
         });
     }
 
+    async findTodayMood(userId, moodDate) {
+        return Mood.findOne({
+            where: {
+                user_id: userId,
+                mood_date: moodDate,
+            },
+        });
+    }
+
     async update(id, data) {
         await Mood.update(data, {
             where: { id },

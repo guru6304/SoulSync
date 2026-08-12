@@ -56,13 +56,11 @@ Mood.init(
 
         indexes: [
             {
-                fields: ['user_id'],
+                unique: true,
+                fields: ['user_id', 'mood_date'],
             },
             {
                 fields: ['couple_id'],
-            },
-            {
-                fields: ['mood_date'],
             },
         ],
     }

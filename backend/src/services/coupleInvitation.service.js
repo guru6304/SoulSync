@@ -183,7 +183,8 @@ const receiver =
             );
             console.log("STEP 5");
             return coupleRepository.findById(
-                couple.id
+                couple.id,
+                transaction
             );
         }
     );

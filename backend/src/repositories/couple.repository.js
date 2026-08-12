@@ -5,23 +5,21 @@ class CoupleRepository {
     return Couple.create(data, { transaction });
   }
 
-  async findById(id) {
+  async findById(id, transaction = null) {
     return Couple.findByPk(id, {
       include: [
         {
           model: CoupleMember,
-
-          as: "members",
-
+          as: "coupleMembers",
           include: [
             {
               model: User,
-
               as: "user",
             },
           ],
         },
       ],
+      transaction,
     });
   }
 

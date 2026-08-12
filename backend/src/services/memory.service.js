@@ -27,7 +27,7 @@ class MemoryService {
     if (memory.visibility !== "private") {
       const partner = await coupleService.getPartner(userId, data.couple_id);
 
-      const partnerId = partner?.user_id;
+      const partnerId = partner?.id;
 
       if (partnerId) {
         await notificationService.createSystemNotification(

@@ -50,7 +50,7 @@ class SaySomethingService {
 
         );
 
-    const partnerId = partner?.user_id;
+    const partnerId = partner?.id;
 
     if (partnerId) {
 
