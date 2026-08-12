@@ -87,7 +87,11 @@ const login = async (data) => {
   throw new ApiError(403, 'Account has been disabled');
 }
 
-  await userRepository.updateLastLogin(user.id);
+  try {
+    await userRepository.updateLastLogin(user.id);
+  } catch (_err) {
+    // Non-blocking timestamp update
+  }
   const tokens = await createTokens(user.id, data);
 
 const activeCouple =
