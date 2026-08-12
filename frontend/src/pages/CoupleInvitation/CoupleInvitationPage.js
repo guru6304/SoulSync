@@ -1,32 +1,35 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import useCoupleInvitation from "../../hooks/useCoupleInvitation";
+import authService from "../../services/auth.service";
+import { setUser } from "../../store/slices/authSlice";
 
 const CoupleInvitationPage = () => {
   const {
     pendingInvitations,
-
     loading,
-
     getPendingInvitations,
-
     invitePartner,
-
     acceptInvite,
-
     rejectInvite,
   } = useCoupleInvitation();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
     message: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [acceptingId, setAcceptingId] = useState(null);
+
   useEffect(() => {
     getPendingInvitations();
   }, [getPendingInvitations]);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInvite = async (e) => {
     e.preventDefault();
@@ -49,6 +52,23 @@ const CoupleInvitationPage = () => {
       alert(error?.response?.data?.message || "Unable to send invitation.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleAccept = async (invitationId) => {
+    if (acceptingId) return;
+    setAcceptingId(invitationId);
+    try {
+      await acceptInvite(invitationId);
+      const updatedUser = await authService.getProfile();
+      dispatch(setUser(updatedUser));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      alert("Couple invitation accepted successfully! ❤️");
+      navigate("/dashboard");
+    } catch (error) {
+      alert(error?.response?.data?.message || "Failed to accept invitation.");
+    } finally {
+      setAcceptingId(null);
     }
   };
 
@@ -109,14 +129,15 @@ const CoupleInvitationPage = () => {
         pendingInvitations.map((item) => (
           <div key={item.id} className="card mb-3">
             <div className="card-body">
-              <h6>{item.sender?.email}</h6>
+              <h6>{item.sender?.email || item.sender_id}</h6>
 
               <div>
                 <button
                   className="btn btn-success me-2"
-                  onClick={() => acceptInvite(item.id)}
+                  disabled={acceptingId === item.id}
+                  onClick={() => handleAccept(item.id)}
                 >
-                  Accept
+                  {acceptingId === item.id ? "Accepting..." : "Accept"}
                 </button>
 
                 <button
