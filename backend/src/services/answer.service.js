@@ -5,6 +5,8 @@ const answerMediaRepository = require("../repositories/answerMedia.repository");
 const questionRepository = require("../repositories/question.repository");
 const coupleRepository = require("../repositories/couple.repository");
 
+const { v4: uuidv4 } = require('uuid');
+
 const answerQuestion = async ({
   userId,
   questionId,
@@ -49,6 +51,7 @@ const answerQuestion = async ({
   return answerRepository.transaction(async (transaction) => {
     const answer = await answerRepository.create(
       {
+        id: uuidv4(),
         couple_id: coupleId,
         question_id: questionId,
         answered_by: userId,

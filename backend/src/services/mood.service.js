@@ -9,6 +9,8 @@ const {
 const moodRepository = require("../repositories/mood.repository");
 const coupleRepository = require("../repositories/couple.repository");
 
+const { v4: uuidv4 } = require('uuid');
+
 class MoodService {
   async createMood(user, data) {
     validateOrThrow(validateCreateMood(data));
@@ -28,6 +30,7 @@ class MoodService {
     }
 
     return moodRepository.create({
+      id: uuidv4(),
       user_id: user.id,
       couple_id: coupleId,
       mood_type: data.mood_type,

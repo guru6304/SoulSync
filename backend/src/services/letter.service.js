@@ -3,6 +3,8 @@ const letterRepository = require('../repositories/letter.repository');
 const coupleService = require('./couple.service');
 const notificationService = require('./notification.service');
 
+const { v4: uuidv4 } = require('uuid');
+
 class LetterService {
   async createLetter(userId, data) {
     if (!data.content || !data.content.trim()) {
@@ -20,6 +22,7 @@ class LetterService {
     }
 
     const letter = await letterRepository.create({
+      id: uuidv4(),
       couple_id: coupleId,
       sender_id: userId,
       title: data.title?.trim() || 'My Forever Love ❤️',
