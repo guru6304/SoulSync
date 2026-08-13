@@ -56,14 +56,6 @@ const CreateMemoryContent = () => {
 
       // Step 3 — Attach uploaded media to the memory (if any images)
       if (memoryId && uploadedMedia.length > 0) {
-        const mediaFormData = new FormData();
-        // Re-attach the original File objects (the upload endpoint expects multipart files)
-        // We already uploaded to Cloudinary — now we call the memory-media endpoint
-        // to save the media metadata under this memory.
-        // Since memoryMedia.service re-uploads files, we instead store Cloudinary results directly.
-        // Use a JSON body approach by calling the attach endpoint if available,
-        // otherwise the memory is saved without media association (media already in Cloudinary).
-        // NOTE: To avoid double-upload, we POST the Cloudinary URLs directly to memory-media.
         try {
           const attachPayload = uploadedMedia.map((m) => ({
             file_url: m.url,
