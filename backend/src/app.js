@@ -32,10 +32,12 @@ const limiter = rateLimit({
 });
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
+const corsOrigin = process.env.CORS_ORIGIN
+    ? (process.env.CORS_ORIGIN.includes(',') ? process.env.CORS_ORIGIN.split(',').map(s => s.trim()) : process.env.CORS_ORIGIN)
+    : 'https://soulsync-api-fe.onrender.com';
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN
-        ? process.env.CORS_ORIGIN.split(',')
-        : true,          // allow all origins when env var not set
+    origin: corsOrigin,
     credentials: true
 }));
 app.use(morgan('dev'));
