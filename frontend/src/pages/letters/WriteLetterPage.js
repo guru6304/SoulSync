@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import useLetters from "../../hooks/useLetters";
 import LetterEditor from "../../components/letters/LetterEditor";
 import ThemeProvider from "../../theme/ThemeProvider";
+import { useToast } from "../../context/ToastContext";
 import "./WriteLetterPage.css";
 
 const WriteLetterContent = () => {
   const navigate = useNavigate();
   const { addLetter } = useLetters();
+  const { showSuccess, showError } = useToast();
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (values) => {
-    await addLetter(values);
-    navigate("/letters");
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const action = await addLetter(values);
+      if (addLetter.rejected?.match(action) || action?.error) {
+        throw new Error(action.payload || action.error?.message || "Failed to save letter.");
+      }
+      showSuccess("Love letter saved successfully 💌");
+      navigate("/letters");
+    } catch (err) {
+      showError(err, "Unable to save letter. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -36,7 +51,7 @@ const WriteLetterContent = () => {
         </div>
 
         {/* Form Composition */}
-        <LetterEditor onSubmit={handleSubmit} />
+        <LetterEditor onSubmit={handleSubmit} disabled={submitting} />
       </div>
     </div>
   );

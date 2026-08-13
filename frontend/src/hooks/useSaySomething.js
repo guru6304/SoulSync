@@ -1,88 +1,64 @@
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
-
-    fetchSaySomething,
-
-    fetchSaySomethingTimeline,
-
+  fetchSaySomething,
+  fetchSaySomethingTimeline,
 } from "../store/slices/saySomethingSlice";
-
-import {
-
-    createSaySomething,
-
-} from "../services/saySomething.service";
+import { createSaySomething } from "../services/saySomething.service";
 
 const useSaySomething = () => {
+  const dispatch = useDispatch();
+  const { timeline, selectedMessage, loading, error } = useSelector(
+    (state) => state.saySomething
+  );
 
-    const dispatch = useDispatch();
+  const getTimeline = useCallback(
+    async (coupleId) => {
+      if (!coupleId) return;
+      return dispatch(fetchSaySomethingTimeline(coupleId));
+    },
+    [dispatch]
+  );
 
-    const {
+  const getMessage = useCallback(
+    (saySomethingId) => {
+      return dispatch(fetchSaySomething(saySomethingId));
+    },
+    [dispatch]
+  );
 
-        timeline,
+  const sendMessage = useCallback(
+    async (coupleIdOrPayload, possiblePayload) => {
+      let coupleId = coupleIdOrPayload;
+      let payload = possiblePayload;
 
-        selectedMessage,
+      // Handle single object argument e.g. { couple_id, message }
+      if (typeof coupleIdOrPayload === "object" && coupleIdOrPayload !== null) {
+        coupleId = coupleIdOrPayload.couple_id || coupleIdOrPayload.coupleId;
+        payload = coupleIdOrPayload;
+      }
 
-        loading,
+      if (!coupleId) throw new Error("Couple ID is required");
 
-        error,
-
-    } = useSelector(
-
-        (state) => state.saySomething
-
-    );
-
-    const getTimeline = async (coupleId) => {
-
-    if (!coupleId) return;
-
-    dispatch(
-        fetchSaySomethingTimeline(coupleId)
-    );
-
-};
-
-    const getMessage = (saySomethingId) => {
-
-        dispatch(
-
-            fetchSaySomething(saySomethingId)
-
-        );
-
-    };
-
-    const sendMessage = async (coupleId, payload) => {
-
-    if (!coupleId) return;
-
-    return await createSaySomething({
+      const res = await createSaySomething({
         ...payload,
         couple_id: coupleId,
-    });
+      });
 
-};
+      return res?.data?.data || res?.data || res;
+    },
+    []
+  );
 
-    return {
-
-        timeline,
-
-        selectedMessage,
-
-        loading,
-
-        error,
-
-        getTimeline,
-
-        getMessage,
-
-        sendMessage,
-
-    };
-
+  return {
+    timeline: Array.isArray(timeline) ? timeline : [],
+    selectedMessage,
+    loading,
+    error,
+    getTimeline,
+    getMessage,
+    sendMessage,
+  };
 };
 
 export default useSaySomething;

@@ -17,13 +17,15 @@ const MemoriesPageContent = () => {
 
   const coupleId = user?.active_couple?.id || user?.active_couple || null;
 
-  const { memories, loading, getMemories } = useMemories();
+  const { memories, loading, error, getMemories } = useMemories();
 
   useEffect(() => {
     if (coupleId) {
       getMemories(coupleId);
     }
   }, [coupleId, getMemories]);
+
+  const memoryList = Array.isArray(memories) ? memories : [];
 
   return (
     <div className="ss-memories-page-wrapper">
@@ -54,11 +56,35 @@ const MemoriesPageContent = () => {
       </header>
 
       <main className="ss-memories-container">
-        {loading ? (
+        {!coupleId ? (
+          <div className="ss-memories-empty">
+            <Images size={48} weight="duotone" />
+            <h3>Connect With Your Partner</h3>
+            <p>Send an invitation to start building your memory album together.</p>
+            <button
+              className="ss-add-memory-btn"
+              onClick={() => navigate("/couple-invitation")}
+            >
+              ❤️ Invite Partner
+            </button>
+          </div>
+        ) : loading ? (
           <div className="ss-memories-loading">
             <p>Loading your memories...</p>
           </div>
-        ) : memories.length === 0 ? (
+        ) : error ? (
+          <div className="ss-memories-empty">
+            <Images size={48} weight="duotone" />
+            <h3>Unable to Load Memories</h3>
+            <p>{typeof error === "string" ? error : "Something went wrong while fetching memories."}</p>
+            <button
+              className="ss-add-memory-btn"
+              onClick={() => getMemories(coupleId)}
+            >
+              🔄 Try Again
+            </button>
+          </div>
+        ) : memoryList.length === 0 ? (
           <div className="ss-memories-empty">
             <Images size={48} weight="duotone" />
             <h3>No Memories Yet</h3>
@@ -72,7 +98,7 @@ const MemoriesPageContent = () => {
           </div>
         ) : (
           <div className="ss-memories-grid">
-            {memories.map((memory) => (
+            {memoryList.map((memory) => (
               <MemoryCard key={memory.id} memory={memory} />
             ))}
           </div>

@@ -10,6 +10,7 @@ import FloatingHearts from "./FloatingHearts";
 import MoodBackground from "./MoodBackground";
 import CardFlipAnimation from "./CardFlipAnimation";
 import PartnerTypingStatus from "./PartnerTypingStatus";
+import { useToast } from "../../../context/ToastContext";
 
 const SoulCard = ({
   question,
@@ -23,10 +24,16 @@ const SoulCard = ({
   onContinue,
 }) => {
   const [submitted, setSubmitted] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   const handleSave = async (answer, media = null) => {
-    await onSave?.(answer, media);
-    setSubmitted(true);
+    try {
+      await onSave?.(answer, media);
+      setSubmitted(true);
+      showSuccess("Answer saved ❤️");
+    } catch (err) {
+      showError(err, "Unable to save answer. Please try again.");
+    }
   };
 
   const handleNext = useCallback(() => {

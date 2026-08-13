@@ -42,14 +42,18 @@ const QuestionsPageContent = () => {
   }, [fetchQuestion]);
 
   const handleSaveAnswer = async (content, media = null) => {
-    try {
-      if (currentAnswer?.id) {
-        await editAnswer(currentAnswer.id, content);
-      } else if (dailySoulCard?.id) {
-        await submitAnswer(dailySoulCard.id, content, media);
+    if (currentAnswer?.id) {
+      const action = await editAnswer(currentAnswer.id, content);
+      if (action?.error || action?.meta?.requestStatus === "rejected") {
+        throw new Error(action.payload || "Failed to update answer.");
       }
-    } catch (err) {
-      console.error(err);
+      return action;
+    } else if (dailySoulCard?.id) {
+      const action = await submitAnswer(dailySoulCard.id, content, media);
+      if (action?.error || action?.meta?.requestStatus === "rejected") {
+        throw new Error(action.payload || "Failed to submit answer.");
+      }
+      return action;
     }
   };
 

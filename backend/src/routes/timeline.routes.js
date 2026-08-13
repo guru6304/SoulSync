@@ -1,14 +1,14 @@
 // src/routes/timeline.routes.js
-
 const express = require('express');
 const router = express.Router();
-const timelineController = require('../controllers/timeline.controller');
+const controller = require('../controllers/timeline.controller');
 const { authMiddleware } = require('../middlewares/auth.middleware');
 
-// Apply authentication middleware
 router.use(authMiddleware);
 
-// GET /api/v1/timeline?page=1&limit=10
-router.get('/', timelineController.getFeed);
+router.get('/', controller.getEvents);
+router.post('/', controller.createEvent);
+router.put('/:id', controller.updateEvent);
+router.delete('/:id', controller.deleteEvent);
 
 module.exports = router;

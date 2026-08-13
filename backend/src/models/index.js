@@ -214,12 +214,19 @@ Mood.belongsTo(Couple, {
 });
 
 const Letter = require('./letter.model');
+const TimelineEvent = require('./timelineEvent.model');
 
 // Associations for Letter
 User.hasMany(Letter, { foreignKey: 'sender_id', as: 'sentLetters' });
 Letter.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
 Couple.hasMany(Letter, { foreignKey: 'couple_id', as: 'letters' });
 Letter.belongsTo(Couple, { foreignKey: 'couple_id', as: 'couple' });
+
+// Associations for TimelineEvent
+User.hasMany(TimelineEvent, { foreignKey: 'created_by', as: 'timelineEvents' });
+TimelineEvent.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+Couple.hasMany(TimelineEvent, { foreignKey: 'couple_id', as: 'timelineEvents' });
+TimelineEvent.belongsTo(Couple, { foreignKey: 'couple_id', as: 'couple' });
 
 module.exports = {
     sequelize,
@@ -239,4 +246,5 @@ module.exports = {
     Mood,
     SaySomething,
     Letter,
+    TimelineEvent,
 };

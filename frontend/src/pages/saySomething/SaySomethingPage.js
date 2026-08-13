@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import MessageCard from "../../components/saySomething/MessageCard";
 import useSaySomething from "../../hooks/useSaySomething";
 import ThemeProvider from "../../theme/ThemeProvider";
+import { useToast } from "../../context/ToastContext";
 import "./SaySomethingPage.css";
 
 const SaySomethingContent = () => {
@@ -13,6 +14,7 @@ const SaySomethingContent = () => {
   const coupleId = user?.active_couple?.id || user?.active_couple || null;
 
   const { timeline, loading, error, getTimeline, sendMessage } = useSaySomething();
+  const { showSuccess, showError } = useToast();
 
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -29,14 +31,12 @@ const SaySomethingContent = () => {
 
     setSubmitting(true);
     try {
-      await sendMessage({
-        couple_id: coupleId,
-        message,
-      });
+      await sendMessage(coupleId, { message: message.trim() });
       setMessage("");
+      showSuccess("Message sent successfully 💬");
       getTimeline(coupleId);
     } catch (err) {
-      console.error(err);
+      showError(err, "Unable to send message. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -103,6 +103,7 @@ const SaySomethingContent = () => {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write something from your heart..."
               className="ss-say-glass-textarea"
+              disabled={submitting}
             />
 
             <div className="ss-say-composer-footer">
@@ -131,7 +132,7 @@ const SaySomethingContent = () => {
           <h2 className="ss-say-timeline-title">Recent Thoughts & Moments</h2>
 
           {loading && <p className="ss-say-status-text">Loading shared messages...</p>}
-          {error && <p className="ss-say-status-error">{error}</p>}
+          {error && <p className="ss-say-status-error">{typeof error === "string" ? error : "Failed to load messages."}</p>}
 
           {!loading && timeline?.length === 0 && (
             <div className="ss-say-empty-timeline">

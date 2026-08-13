@@ -42,11 +42,8 @@ class SaySomethingService {
 
     const partner =
         await coupleService.getPartner(
-
             userId,
-
-            data.couple_id
-
+            coupleId
         );
 
     const partnerId = partner?.id;

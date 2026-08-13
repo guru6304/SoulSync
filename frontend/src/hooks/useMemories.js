@@ -1,42 +1,44 @@
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
-
-    useDispatch,
-
-    useSelector,
-
-} from "react-redux";
-
-import {
-
-    fetchMemories,
-
-    fetchMemory,
-
-    createMemory,
-
+  fetchMemories,
+  fetchMemory,
+  createMemory,
 } from "../store/slices/memorySlice";
 
 const useMemories = () => {
+  const dispatch = useDispatch();
+  const state = useSelector((store) => store.memories);
 
-    const dispatch = useDispatch();
+  const getMemories = useCallback(
+    (coupleId) => {
+      if (!coupleId) return;
+      return dispatch(fetchMemories(coupleId));
+    },
+    [dispatch]
+  );
 
-    const state = useSelector(
+  const getMemory = useCallback(
+    (id) => {
+      return dispatch(fetchMemory(id));
+    },
+    [dispatch]
+  );
 
-        (store) => store.memories
+  const addMemory = useCallback(
+    (payload) => {
+      return dispatch(createMemory(payload));
+    },
+    [dispatch]
+  );
 
-    );
-
-    return {
-
-        ...state,
-
-        getMemories: (coupleId) => dispatch(fetchMemories(coupleId)),
-        getMemory: (id) => dispatch(fetchMemory(id)),
-
-        addMemory: (payload) => dispatch(createMemory(payload)),
-
-    };
-
+  return {
+    ...state,
+    memories: Array.isArray(state?.memories) ? state.memories : [],
+    getMemories,
+    getMemory,
+    addMemory,
+  };
 };
 
 export default useMemories;
