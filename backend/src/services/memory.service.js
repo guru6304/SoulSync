@@ -117,10 +117,16 @@ await memoryRepository.remove(memoryId);
     };
   }
 
-  async listMemories(userId, coupleId) {
-    await coupleService.findMembership(userId, coupleId);
+  async listMemories(userId, coupleId = null) {
+    let resolvedCoupleId = coupleId;
+    if (!resolvedCoupleId || resolvedCoupleId === 'undefined') {
+      const activeCouple = await coupleService.getRequiredActiveCouple(userId);
+      resolvedCoupleId = activeCouple.id;
+    } else {
+      await coupleService.findMembership(userId, resolvedCoupleId);
+    }
 
-    return await memoryRepository.findAllByCouple(coupleId);
+    return await memoryRepository.findAllByCouple(resolvedCoupleId);
   }
 }
 

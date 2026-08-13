@@ -44,6 +44,7 @@ class MemoryRepository {
   }
 
   async findAllByCouple(coupleId) {
+    const { MemoryMedia } = require('../models');
     return await Memory.findAll({
       where: {
         couple_id: coupleId,
@@ -54,8 +55,12 @@ class MemoryRepository {
           as: "creator",
           attributes: ["id", "first_name", "last_name", "profile_picture"],
         },
+        {
+          model: MemoryMedia,
+          as: "media",
+        },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
     });
   }
 

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import WriteLetterPage from "../pages/letters/WriteLetterPage";
+import LetterDetailsPage from "../pages/letters/LetterDetailsPage";
+import EditLetterPage from "../pages/letters/EditLetterPage";
 import CreateMemoryPage from "../pages/memories/CreateMemoryPage";
 import SaySomethingPage from "../pages/saySomething/SaySomethingPage";
 import LoginPage from "../pages/auth/Login/LoginPage";
@@ -28,7 +30,6 @@ const AppRoutes = () => {
       <Routes>
         {/* Public */}
 
-
         <Route
           path="/login"
           element={
@@ -50,8 +51,9 @@ const AppRoutes = () => {
         {/* Protected */}
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<MoodsPage />} />
+          <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/moods" element={<MoodsPage />} />
 
           <Route path="/moods/:moodId" element={<MoodThemePage />} />
           <Route path="/moods/:moodId/card" element={<QuestionsPage />} />
@@ -63,14 +65,15 @@ const AppRoutes = () => {
           <Route path="/memories" element={<MemoriesPage />} />
 
           <Route path="/letters" element={<LettersPage />} />
+          <Route path="/letters/write" element={<WriteLetterPage />} />
+          <Route path="/letters/:id" element={<LetterDetailsPage />} />
+          <Route path="/letters/:id/edit" element={<EditLetterPage />} />
 
           <Route path="/questions" element={<QuestionsPage />} />
 
           <Route path="/notifications" element={<NotificationPage />} />
 
           <Route path="/couple-invitation" element={<CoupleInvitationPage />} />
-
-          <Route path="/letters/write" element={<WriteLetterPage />} />
 
           <Route path="/memories/create" element={<CreateMemoryPage />} />
 

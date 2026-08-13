@@ -42,9 +42,7 @@ const SSBottomNav = () => {
       >
         {menus.map((item) => {
           const Icon = item.icon;
-          const destination = item.title === "Home"
-            ? `/moods/${themeContext?.id || "romantic"}`
-            : item.path;
+          const destination = item.path;
 
           return (
             <NavLink

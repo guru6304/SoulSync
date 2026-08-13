@@ -12,6 +12,8 @@ router.use(authenticate);
 
 router.post('/', controller.createMemory);
 
+router.get('/', controller.listMemories);
+
 router.get('/couple/:coupleId', controller.listMemories);
 
 router.get("/:memoryId", controller.getMemory);
