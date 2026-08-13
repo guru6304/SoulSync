@@ -29,7 +29,7 @@ class MemoryService {
     });
 
     if (memory.visibility !== "private") {
-      const partner = await coupleService.getPartner(userId, data.couple_id);
+      const partner = await coupleService.getPartner(userId, coupleId);
 
       const partnerId = partner?.id;
 

@@ -63,6 +63,7 @@ async findReceived(userId) {
 
         where: {
             receiver_id: userId,
+            status: 'pending',
         },
 
         include: [

@@ -18,6 +18,11 @@ router.post(
     controller.uploadMedia
 );
 
+router.post(
+    '/attach/:memoryId',
+    controller.attachMedia
+);
+
 router.get(
     '/:memoryId',
     controller.listMedia

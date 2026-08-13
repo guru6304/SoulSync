@@ -10,6 +10,8 @@ const {
     validateListMedia,
 } = require('../validations/memoryMedia.validation');
 
+const { v4: uuidv4 } = require('uuid');
+
 const validateOrThrow = (validation) => {
     if (!validation.isValid) {
         throw new ApiError(
@@ -87,8 +89,37 @@ const deleteMedia = asyncHandler(async (req, res) => {
     );
 });
 
+/**
+ * POST /api/v1/memory-media/attach/:memoryId
+ * Body: { media: [{ file_url, public_id, media_type, file_size, mime_type }] }
+ * Attaches already-uploaded Cloudinary assets to a memory without re-uploading.
+ */
+const attachMedia = asyncHandler(async (req, res) => {
+    const { memoryId } = req.params;
+    const { media } = req.body;
+
+    if (!memoryId) {
+        throw new ApiError(400, 'memoryId is required');
+    }
+
+    if (!Array.isArray(media) || media.length === 0) {
+        throw new ApiError(400, 'media array is required and must not be empty');
+    }
+
+    const result = await memoryMediaService.attachMedia(
+        req.user.id,
+        memoryId,
+        media
+    );
+
+    return res.status(201).json(
+        new ApiResponse(201, result, 'Media attached successfully.')
+    );
+});
+
 module.exports = {
     uploadMedia,
     listMedia,
     deleteMedia,
+    attachMedia,
 };

@@ -196,6 +196,30 @@ class MemoryMediaService {
             deleted: true,
         };
     }
+
+    async attachMedia(userId, memoryId, mediaList) {
+        const memory = await memoryRepository.findById(memoryId);
+        if (!memory) {
+            throw new ApiError(404, 'Memory not found');
+        }
+
+        await coupleService.findMembership(userId, memory.couple_id);
+
+        const uploads = mediaList.map((item) => ({
+            memory_id: memory.id,
+            uploaded_by: userId,
+            media_type: item.media_type || 'image',
+            file_url: item.file_url,
+            public_id: item.public_id || null,
+            thumbnail_url: item.thumbnail_url || null,
+            mime_type: item.mime_type || null,
+            original_name: item.original_name || null,
+            file_size: item.file_size || null,
+            duration: item.duration || null,
+        }));
+
+        return await memoryMediaRepository.bulkCreate(uploads);
+    }
 }
 
 module.exports = new MemoryMediaService();

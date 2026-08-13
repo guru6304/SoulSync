@@ -19,6 +19,7 @@ const uploadRoutes = require('./routes/upload.routes');
 const answerRoutes = require('./routes/answer.routes');
 const saySomethingRoutes = require("./routes/saySomething.routes");
 const letterRoutes = require('./routes/letter.routes');
+const memoryMediaRoutes = require('./routes/memoryMedia.routes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -45,6 +46,7 @@ app.use('/api/', limiter);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/letters', letterRoutes);
 app.use('/api/v1/memories', memoryRoutes);
+app.use('/api/v1/memory-media', memoryMediaRoutes);
 app.use('/api/v1/moods', moodRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/timeline', timelineRoutes);

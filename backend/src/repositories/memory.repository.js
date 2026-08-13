@@ -58,6 +58,58 @@ class MemoryRepository {
       order: [["createdAt", "DESC"]],
     });
   }
+
+  async getTimelineFeed(coupleId, userId, limit = 10, offset = 0) {
+    const { MemoryMedia, MemoryReaction, MemoryComment } = require('../models');
+    const { fn, col, literal } = require('sequelize');
+
+    const { count, rows } = await Memory.findAndCountAll({
+      where: { couple_id: coupleId },
+      include: [
+        {
+          model: User,
+          as: 'creator',
+          attributes: ['id', 'first_name', 'last_name', 'profile_picture'],
+        },
+        {
+          model: MemoryMedia,
+          as: 'media',
+          attributes: ['id', 'media_type', 'file_url', 'thumbnail_url'],
+          required: false,
+        },
+        {
+          model: MemoryReaction,
+          as: 'reactions',
+          required: false,
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'first_name', 'last_name', 'profile_picture'],
+            },
+          ],
+        },
+        {
+          model: MemoryComment,
+          as: 'comments',
+          required: false,
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'first_name', 'last_name', 'profile_picture'],
+            },
+          ],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+      distinct: true,
+    });
+
+    return { rows, count };
+  }
 }
 
 module.exports = new MemoryRepository();

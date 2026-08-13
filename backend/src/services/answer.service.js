@@ -4,6 +4,7 @@ const answerRepository = require("../repositories/answer.repository");
 const answerMediaRepository = require("../repositories/answerMedia.repository");
 const questionRepository = require("../repositories/question.repository");
 const coupleService = require("./couple.service");
+const coupleRepository = require("../repositories/couple.repository");
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -109,7 +110,7 @@ const getMyAnswers = async (userId, moodType = null) => {
 };
 
 const getPartnerAnswers = async (userId, moodType = null) => {
-  const couple = await coupleRepository.findActiveCoupleByUserId(userId);
+  const couple = await coupleService.getActiveCouple(userId);
   if (!couple) {
     return [];
   }

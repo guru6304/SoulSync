@@ -110,9 +110,9 @@ const PartnerAnswersPageContent = () => {
                             {ans.media.map((item, mIdx) => (
                               <div key={item.id || mIdx} className="ss-media-preview">
                                 {item.media_type === "image" ? (
-                                  <img src={item.media_url} alt="Partner attachment" />
+                                  <img src={item.file_url} alt="Partner attachment" />
                                 ) : (
-                                  <a href={item.media_url} target="_blank" rel="noopener noreferrer">View Media</a>
+                                  <a href={item.file_url} target="_blank" rel="noopener noreferrer">View Media</a>
                                 )}
                               </div>
                             ))}

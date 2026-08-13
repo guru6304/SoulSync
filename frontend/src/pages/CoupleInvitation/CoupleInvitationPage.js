@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import useCoupleInvitation from "../../hooks/useCoupleInvitation";
 import authService from "../../services/auth.service";
 import { setUser } from "../../store/slices/authSlice";
+import { useToast } from "../../context/ToastContext";
 
 const CoupleInvitationPage = () => {
   const {
@@ -18,6 +19,7 @@ const CoupleInvitationPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { showSuccess, showError } = useToast();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,6 +28,10 @@ const CoupleInvitationPage = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [acceptingId, setAcceptingId] = useState(null);
+
+  // Ref-based lock prevents double-accept even on rapid double-click
+  // (React state updates are async — the ref is synchronous)
+  const acceptingRef = useRef(false);
 
   useEffect(() => {
     getPendingInvitations();
@@ -42,33 +48,58 @@ const CoupleInvitationPage = () => {
         message: formData.message,
       });
 
-      setFormData({
-        email: "",
-        message: "",
-      });
-
-      alert("Invitation sent successfully ❤️");
+      setFormData({ email: "", message: "" });
+      showSuccess("Invitation sent successfully ❤️");
     } catch (error) {
-      alert(error?.response?.data?.message || "Unable to send invitation.");
+      showError(error, "Unable to send invitation. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleAccept = async (invitationId) => {
-    if (acceptingId) return;
+    // Synchronous ref guard — blocks any second call even before React re-renders
+    if (acceptingRef.current) return;
+    acceptingRef.current = true;
     setAcceptingId(invitationId);
+
     try {
       await acceptInvite(invitationId);
+
+      // Refresh user profile to get updated active_couple
       const updatedUser = await authService.getProfile();
       dispatch(setUser(updatedUser));
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      alert("Couple invitation accepted successfully! ❤️");
+
+      showSuccess("Couple invitation accepted! ❤️ Your journey begins now.");
       navigate("/dashboard");
     } catch (error) {
-      alert(error?.response?.data?.message || "Failed to accept invitation.");
+      const msg = error?.response?.data?.message || "";
+
+      // If first request succeeded but a race condition produced a duplicate,
+      // treat "already accepted" as success and redirect instead of showing an error.
+      if (
+        msg.toLowerCase().includes("already accepted") ||
+        msg.toLowerCase().includes("already belong")
+      ) {
+        showSuccess("You are already connected with your partner ❤️");
+        navigate("/dashboard");
+        return;
+      }
+
+      showError(error, "Unable to accept invitation. Please try again.");
     } finally {
+      acceptingRef.current = false;
       setAcceptingId(null);
+    }
+  };
+
+  const handleReject = async (invitationId) => {
+    try {
+      await rejectInvite(invitationId);
+      showSuccess("Invitation rejected.");
+    } catch (error) {
+      showError(error, "Unable to reject invitation. Please try again.");
     }
   };
 
@@ -112,7 +143,11 @@ const CoupleInvitationPage = () => {
           />
         </div>
 
-        <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+        <button
+          className="btn btn-primary"
+          type="submit"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? "Sending..." : "Send Invitation"}
         </button>
       </form>
@@ -136,13 +171,15 @@ const CoupleInvitationPage = () => {
                   className="btn btn-success me-2"
                   disabled={acceptingId === item.id}
                   onClick={() => handleAccept(item.id)}
+                  id={`accept-invitation-${item.id}`}
                 >
                   {acceptingId === item.id ? "Accepting..." : "Accept"}
                 </button>
 
                 <button
                   className="btn btn-danger"
-                  onClick={() => rejectInvite(item.id)}
+                  onClick={() => handleReject(item.id)}
+                  id={`reject-invitation-${item.id}`}
                 >
                   Reject
                 </button>

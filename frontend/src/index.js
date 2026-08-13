@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { ThemeProvider } from "./context/ThemeContext";
+import { ToastProvider } from "./context/ToastContext";
 
 import './styles/global.css';
 
@@ -22,9 +23,11 @@ root.render(
 
     <Provider store={store}>
 
-        <App />
+        <ToastProvider>
+            <App />
+        </ToastProvider>
 
     </Provider>
 
-</ThemeProvider>
+    </ThemeProvider>
 );
