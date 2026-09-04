@@ -35,7 +35,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { loading } = useSelector((state) => state.auth);
+  const { loading, error: authError } = useSelector((state) => state.auth);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -94,6 +94,8 @@ const LoginPage = () => {
           <h1>Soul Sync</h1>
 
           <p>Every heartbeat has a story.</p>
+
+          {authError && <div className="form-error-banner">{authError}</div>}
 
           <form onSubmit={handleSubmit}>
             <Input
