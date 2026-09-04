@@ -26,7 +26,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { loading } = useSelector((state) => state.auth);
+  const { loading, error: authError } = useSelector((state) => state.auth);
 
   const { values, errors, handleChange, validate } = useForm(
     {
@@ -90,6 +90,8 @@ if (pendingMood) {
           <h1>Create Account</h1>
 
           <p>Begin your Soul Sync journey.</p>
+
+          {authError && <div className="form-error-banner">{authError}</div>}
 
           <form onSubmit={handleSubmit}>
             <Input

@@ -22,11 +22,21 @@ const validateRegister = (data = {}) => {
   const errors = [];
   const { first_name, last_name, username, email, password } = data;
 
-  if (!hasValidLength(first_name, 2, 100)) errors.push({ field: 'first_name', message: 'First name must be 2 to 100 characters.' });
-  if (!hasValidLength(last_name, 1, 100)) errors.push({ field: 'last_name', message: 'Last name must be 1 to 100 characters.' });
-  if (!hasValidLength(username, 3, 30) || !USERNAME_PATTERN.test(username)) errors.push({ field: 'username', message: 'Username must be 3 to 30 letters, numbers, or underscores.' });
-  if (typeof email !== 'string' || !EMAIL_PATTERN.test(email.trim())) errors.push({ field: 'email', message: 'A valid email is required.' });
-  if (typeof password !== 'string' || !PASSWORD_PATTERN.test(password)) errors.push({ field: 'password', message: 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.' });
+  if (typeof first_name !== 'string' || !first_name.trim() || first_name.trim().length > 100) {
+    errors.push({ field: 'first_name', message: 'First name is required (max 100 characters).' });
+  }
+  if (last_name !== undefined && last_name !== null && (typeof last_name !== 'string' || last_name.trim().length > 100)) {
+    errors.push({ field: 'last_name', message: 'Last name must be up to 100 characters.' });
+  }
+  if (!hasValidLength(username, 3, 30) || !USERNAME_PATTERN.test(username)) {
+    errors.push({ field: 'username', message: 'Username must be 3 to 30 letters, numbers, or underscores.' });
+  }
+  if (typeof email !== 'string' || !EMAIL_PATTERN.test(email.trim())) {
+    errors.push({ field: 'email', message: 'A valid email is required.' });
+  }
+  if (typeof password !== 'string' || password.length < 6) {
+    errors.push({ field: 'password', message: 'Password must be at least 6 characters long.' });
+  }
 
   return { isValid: errors.length === 0, errors };
 };

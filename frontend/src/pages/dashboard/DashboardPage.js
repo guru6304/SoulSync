@@ -110,7 +110,7 @@ const DashboardPage = () => {
       <main className="dashboard-main">
         <header className="dashboard-header">
           <div><p>{greeting}, {user?.first_name || user?.username || "My Love"}! <span aria-hidden="true">☀️</span></p><h1>Here’s your love dashboard for today</h1></div>
-          <div className="dashboard-account"><button className="icon-button" onClick={() => navigate("/notifications")} aria-label="Notifications"><Bell size={20} /></button><div className="account-avatar">{user?.first_name?.[0] || "S"}</div><div><strong>My Love</strong><small>Soul Mates</small></div><ChevronDown size={17} /><button className="logout-link" onClick={() => { dispatch(logout()); navigate("/login", { replace: true }); }}>Log out</button></div>
+          <div className="dashboard-account"><button className="icon-button" onClick={() => navigate("/moods")} title="Select Mood"><Sparkles size={20} /></button><button className="icon-button" onClick={() => navigate("/notifications")} aria-label="Notifications"><Bell size={20} /></button><div className="account-avatar">{user?.first_name?.[0] || "S"}</div><div><strong>My Love</strong><small>Soul Mates</small></div><ChevronDown size={17} /><button className="logout-button-visible" onClick={() => { dispatch(logout()); navigate("/login", { replace: true }); }}>Log out</button></div>
         </header>
 
         {error && <section className="dashboard-error">Unable to load your dashboard right now. <button onClick={() => dispatch(fetchDashboard())}>Try again</button></section>}
@@ -118,7 +118,7 @@ const DashboardPage = () => {
 
         <section className="dashboard-hero">
           <div className="hero-decor" aria-hidden="true">{theme.emojis?.slice(0, 4).join(" ")}</div>
-          <div className="hero-copy"><span className="mood-badge">{theme.title} mood {theme.emoji}</span><h2>Daily Soul Card</h2><p>Explore today’s question, created especially for your mood.</p><div className="hero-actions"><button className="primary-action" onClick={() => navigate(questionPath)}><MessageCircle size={18} /> Answer Now</button><button onClick={() => navigate(`/moods/${mood}/my-answers`)}><NotebookPen size={18} /> My Answers</button><button onClick={() => navigate(`/moods/${mood}/partner-answers`)}><HeartHandshake size={18} /> Partner Answers</button></div></div>
+          <div className="hero-copy"><span className="mood-badge-clickable" onClick={() => navigate("/moods")}>{theme.title} mood {theme.emoji} <span>(Change Mood)</span></span><h2>Daily Soul Card</h2><p>Explore today’s question, created especially for your mood.</p><div className="hero-actions"><button className="primary-action" onClick={() => navigate(questionPath)}><MessageCircle size={18} /> Answer Now</button><button onClick={() => navigate(`/moods/${mood}/my-answers`)}><NotebookPen size={18} /> My Answers</button><button onClick={() => navigate(`/moods/${mood}/partner-answers`)}><HeartHandshake size={18} /> Partner Answers</button></div></div>
           <div className="love-streaks"><h3>Your Love Streaks <span>🔥</span></h3><p>Keep the love going!</p><div className="streak-grid"><div><Heart size={17} fill="currentColor" /><strong>{dayCount ?? "—"}</strong><small>Days Together</small></div><div><Sparkles size={17} /><strong>{dashboard?.stats?.questionAnswered ?? "—"}</strong><small>Soul Cards</small></div></div></div>
         </section>
 
