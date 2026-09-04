@@ -7,7 +7,10 @@ const notificationService = require('./notification.service');
 
 class TimelineService {
   async getEvents(userId) {
-    const activeCouple = await coupleService.getRequiredActiveCouple(userId);
+    const activeCouple = await coupleService.getActiveCouple(userId);
+    if (!activeCouple) {
+      return [];
+    }
     const coupleId = activeCouple.id;
     return await timelineEventRepository.findAllByCouple(coupleId);
   }
