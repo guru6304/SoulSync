@@ -8,6 +8,11 @@ class DashboardService {
     const membership = user?.couples?.[0] ?? null;
 
     if (!membership) {
+      const [todayMood, pendingInvitation] = await Promise.all([
+        dashboardRepository.findTodayMood(userId, new Date().toISOString().split("T")[0]),
+        dashboardRepository.findPendingInvitation(userId),
+      ]);
+
       return {
         user,
 
@@ -15,9 +20,9 @@ class DashboardService {
 
         hasCouple: false,
 
-        todayMood: null,
+        todayMood,
 
-        pendingInvitation: null,
+        pendingInvitation,
 
         recentMemories: [],
 
@@ -42,8 +47,6 @@ class DashboardService {
     }
 
     const coupleId = membership.id;
-
-    await coupleService.findMembership(userId, coupleId);
 
     const today = new Date().toISOString().split("T")[0];
 
