@@ -4,29 +4,14 @@ const EMAIL_PATTERN =
 const USERNAME_PATTERN =
     /^[a-zA-Z0-9_]+$/;
 
-const PASSWORD_PATTERN =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-
 const validateRegister = (data) => {
 
     const errors = {};
 
-    if (!data.first_name.trim()) {
+    if (!data.first_name || !data.first_name.trim()) {
 
         errors.first_name =
             'First name is required.';
-
-    } else if (data.first_name.trim().length < 2) {
-
-        errors.first_name =
-            'First name must be at least 2 characters.';
-
-    }
-
-    if (!data.last_name.trim()) {
-
-        errors.last_name =
-            'Last name is required.';
 
     }
 
@@ -59,10 +44,10 @@ const validateRegister = (data) => {
         errors.password =
             'Password is required.';
 
-    } else if (!PASSWORD_PATTERN.test(data.password)) {
+    } else if (data.password.length < 6) {
 
         errors.password =
-            'Password must contain uppercase, lowercase, number and special character.';
+            'Password must be at least 6 characters.';
 
     }
 
